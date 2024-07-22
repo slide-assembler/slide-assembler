@@ -1,9 +1,5 @@
 ﻿using ShapeCrawler;
 using SlideAssembler;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 
 public class FillPlaceHolders : IPrestationOperation
@@ -19,14 +15,12 @@ public class FillPlaceHolders : IPrestationOperation
     {
         foreach (var slide in presentation.Slides)
         {
-            foreach (var shape in slide.Shapes)
+            foreach (var textFrame in slide.TextFrames())
             {
-                if (shape is ITextFrame textFrame)
-                {
-                    var text = textFrame.Text;
-                    var newText = ReplacePlaceholders(text, data);
-                    textFrame.Text = newText;
-                }
+
+                var text = textFrame.Text;
+                var newText = ReplacePlaceholders(text, data);
+                textFrame.Text = newText;
             }
         }
     }
@@ -39,8 +33,8 @@ public class FillPlaceHolders : IPrestationOperation
 
         foreach (Match match in matches)
         {
-            var placeholder = match.Groups[1].Value; // Platzhaltername
-            var format = match.Groups[3].Value; // Optionales Format ohne :
+            var placeholder = match.Groups[1].Value;
+            var format = match.Groups[3].Value;
 
             // Get the value from the data object
             var value = GetDataValue(data, placeholder);
@@ -51,15 +45,17 @@ public class FillPlaceHolders : IPrestationOperation
                 string formattedValue;
                 if (!string.IsNullOrEmpty(format))
                 {
-                    formattedValue = string.Format($"{{0:{format}}}", value);
+                    double val = Convert.ToDouble(value);
+                    formattedValue = val.ToString(format.Trim());
                 }
                 else
                 {
                     formattedValue = value.ToString();
                 }
 
-                // Replace the placeholder with the formatted value
+                // replace the placeholder with the formatted value  
                 text = text.Replace(match.Value, formattedValue);
+
             }
         }
 
@@ -68,32 +64,25 @@ public class FillPlaceHolders : IPrestationOperation
 
     private object GetDataValue(object data, string placeholder)
     {
-        // Use a stack to perform a depth-first search on all properties of the data object
-        var stack = new Stack<object>();
-        stack.Push(data);
 
-        while (stack.Count > 0)
+        var properties = placeholder.Split('.');
+        object courantObject = data;
+
+
+        foreach (var property in properties)
         {
-            var current = stack.Pop();
-            if (current == null)
-                continue;
+            if (courantObject == null) return null;
 
-            var type = current.GetType();
-            var propertyInfo = type.GetProperty(placeholder, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-            if (propertyInfo != null)
-            {
-                return propertyInfo.GetValue(current);
-            }
 
-            foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
-            {
-                if (prop.PropertyType.IsClass && prop.PropertyType != typeof(string))
-                {
-                    stack.Push(prop.GetValue(current));
-                }
-            }
+            var propertyInfo = courantObject.GetType().GetProperty(property.Trim());
+            if (propertyInfo == null) return null;
+
+
+            courantObject = propertyInfo.GetValue(courantObject);
+
         }
 
-        return null;
+        return courantObject;
     }
+
 }

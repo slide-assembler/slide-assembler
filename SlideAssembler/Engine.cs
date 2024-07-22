@@ -3,18 +3,18 @@
 namespace SlideAssembler;
 
 
-class SlideAssembler
+public class SlideAssembler
 {
     private readonly Presentation presentation;
 
     private SlideAssembler(Presentation presentation) { this.presentation = presentation; }
 
-    public static Presentation Load(Stream stream) // Loads presantion from Stream
+    public static SlideAssembler Load(Stream stream) // load presantion from stream
     {
         if (stream == null) throw new ArgumentNullException(nameof(stream));
         try
         {
-            return new Presentation(stream);
+            return new SlideAssembler(new Presentation(stream));
         }
         catch (InvalidDataException ex)
         {
@@ -23,11 +23,12 @@ class SlideAssembler
 
     }
 
-    public void Save(Stream stream) // Saves prestation in Stream 
+    public void Save(Stream stream) // save prestation in stream 
     {
         if (stream == null) throw new ArgumentNullException("Stream can not be null.");
         try
         {
+
             presentation.SaveAs(stream);
         }
         catch (InvalidDataException ex)
@@ -37,18 +38,18 @@ class SlideAssembler
 
     }
 
-    public SlideAssembler Apply(params IPrestationOperation[] operations) // Applys chnages and get the Updatet Prestation
+    public SlideAssembler Apply(params IPrestationOperation[] operations) // applys changes and get the pdatet Prestation
     {
         foreach (var operation in operations)
         {
-            operation.Apply(presentation);
+            operation.Apply(this.presentation);
         }
         return this;
     }
 
 }
 
-interface IPrestationOperation
+public interface IPrestationOperation
 {
     void Apply(Presentation presentation);
 }
