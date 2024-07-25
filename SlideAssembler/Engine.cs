@@ -9,6 +9,7 @@ public class SlideAssembler
 
     private SlideAssembler(Presentation presentation) { this.presentation = presentation; }
 
+
     public static SlideAssembler Load(Stream stream) // load presantion from stream
     {
         if (stream == null) throw new ArgumentNullException(nameof(stream));

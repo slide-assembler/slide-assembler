@@ -26,9 +26,15 @@ namespace TestSlideAssembler
             using var template = File.OpenRead("Template.pptx");
             using var output = new FileStream("Output.pptx", FileMode.Create, FileAccess.ReadWrite);
 
-            SlideAssembler.SlideAssembler.Load(template)
-                        .Apply(new FillPlaceHolders(data))
-                        .Save(output);
+            SlideAssembler.SlideAssembler slideAssembler = SlideAssembler.SlideAssembler.Load(template);
+
+            slideAssembler = slideAssembler.Apply(new FillPlaceHolders(data));
+            slideAssembler.Apply(new SetWidth("MittelwertRechteck", (Decimal)data.Mittelwert))
+                .Apply(new SetWidth("MaximumRechteck", (Decimal)data.Maximum))
+                .Apply(new SetWidth("MaximumRechteck", (Decimal)data.Minimum))
+                .Save(output);
+
+
 
         }
     }
