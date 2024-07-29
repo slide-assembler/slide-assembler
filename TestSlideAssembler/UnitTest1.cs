@@ -29,13 +29,18 @@ namespace TestSlideAssembler
             SlideAssembler.SlideAssembler slideAssembler = SlideAssembler.SlideAssembler.Load(template);
 
             slideAssembler = slideAssembler.Apply(new FillPlaceHolders(data));
-            slideAssembler.Apply(new SetWidth("MittelwertRechteck", (Decimal)data.Mittelwert))
+            slideAssembler
                 .Apply(new SetWidth("MaximumRechteck", (Decimal)data.Maximum))
-                .Apply(new SetWidth("MaximumRechteck", (Decimal)data.Minimum))
-                .Save(output);
+                .Apply(new SetWidth("MaximumRechteck", (Decimal)data.Minimum));
 
+            slideAssembler.Apply(new ModifyObject("MittelwertRechteck", o =>
+            {
+                o.TextFrame.Text = data.Mittelwert.ToString("N2");
+                o.Width = (Decimal)data.Mittelwert;
+                o.Height = 40;
+            }));
 
-
+            slideAssembler.Save(output);
         }
     }
 }
