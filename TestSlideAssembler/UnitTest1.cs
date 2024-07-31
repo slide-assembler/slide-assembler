@@ -14,8 +14,8 @@ namespace TestSlideAssembler
                 Titel = $"Messwerte vom {DateTime.Now:d}",
                 Benutzer = new
                 {
-                    Vorname = "Philipp",
-                    Nachname = "Kunnert"
+                    Vorname = "Max",
+                    Nachname = "Mustermann"
                 },
                 Minimum = values.Min(),
                 Mittelwert = values.Average(),
@@ -29,7 +29,6 @@ namespace TestSlideAssembler
             SlideAssembler.SlideAssembler.Load(template)
                         .Apply(new FillPlaceHolders(data))
                         .Save(output);
-
         }
     }
 }
