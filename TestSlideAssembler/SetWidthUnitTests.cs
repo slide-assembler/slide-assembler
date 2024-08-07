@@ -1,10 +1,10 @@
 namespace TestSlideAssembler
 {
     [TestClass]
-    public class UnitTest1
+    public class SetWidthUnitTests
     {
         [TestMethod]
-        public void TestMethod1()
+        public void StandartTest()
         {
             var values = new[] { 0.82, 0.88, 0.64, 0.79, 0.31 };
 
@@ -33,9 +33,6 @@ namespace TestSlideAssembler
                 .Apply(new SetWidth("MaximumRechteck", (Decimal)data.Maximum))
                 .Apply(new SetWidth("MaximumRechteck", (Decimal)data.Minimum))
                 .Save(output);
-
-
-
         }
     }
 }
