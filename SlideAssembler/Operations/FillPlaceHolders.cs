@@ -3,7 +3,7 @@ using SlideAssembler;
 using System.Text.RegularExpressions;
 
 
-public partial class FillPlaceHolders : IPrestationOperation
+public partial class FillPlaceholders : IPresentationOperation
 {
     private readonly object data;
 
@@ -11,7 +11,7 @@ public partial class FillPlaceHolders : IPrestationOperation
     [GeneratedRegex(@"{{(.*?)(:(.*?))?}}", RegexOptions.None)]
     private static partial Regex PlaceholderRegex();
 
-    public FillPlaceHolders(object data)
+    public FillPlaceholders(object data)
     {
         this.data = data;
     }
@@ -32,7 +32,6 @@ public partial class FillPlaceHolders : IPrestationOperation
 
     private string ReplacePlaceholders(string text, object data)
     {
-        
         var matches = PlaceholderRegex().Matches(text);
 
         foreach (Match match in matches)
@@ -70,23 +69,20 @@ public partial class FillPlaceHolders : IPrestationOperation
     {
 
         var properties = placeholder.Split('.');
-        object courantObject = data;
+        object currentObject = data;
 
 
         foreach (var property in properties)
         {
-            if (courantObject == null) return null;
+            if (currentObject == null) return null;
 
-
-            var propertyInfo = courantObject.GetType().GetProperty(property.Trim());
+            var propertyInfo = currentObject.GetType().GetProperty(property.Trim());
             if (propertyInfo == null) return null;
 
-
-            courantObject = propertyInfo.GetValue(courantObject);
-
+            currentObject = propertyInfo.GetValue(currentObject);
         }
 
-        return courantObject;
+        return currentObject;
     }
 
 }

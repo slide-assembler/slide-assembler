@@ -9,7 +9,7 @@ public class SlideAssembler
 
     private SlideAssembler(Presentation presentation) { this.presentation = presentation; }
 
-    public static SlideAssembler Load(Stream stream) // load presantion from stream
+    public static SlideAssembler Load(Stream stream) // load Presentation from stream
     {
         if (stream == null || !stream.CanRead)
             throw new ArgumentException("Stream is null or not readable.", nameof(stream));
@@ -60,9 +60,9 @@ public class SlideAssembler
         return false;
     }
 
-    public void Save(Stream stream) // save prestation in stream 
+    public void Save(Stream stream) // save Presentation in stream 
     {
-        if (stream == null) throw new ArgumentNullException("Stream can not be null.");
+        if (stream == null) throw new ArgumentNullException("Stream can´t be null.");
         try
         {
 
@@ -75,7 +75,7 @@ public class SlideAssembler
 
     }
 
-    public SlideAssembler Apply(params IPrestationOperation[] operations) // applys changes and get the pdatet Prestation
+    public SlideAssembler Apply(params IPresentationOperation[] operations) // applies changes and get the updatet Presentation
     {
         foreach (var operation in operations)
         {
@@ -83,11 +83,5 @@ public class SlideAssembler
         }
         return this;
     }
-
-}
-
-public interface IPrestationOperation
-{
-    void Apply(Presentation presentation);
 }
 
