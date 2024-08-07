@@ -8,7 +8,7 @@ public partial class FillPlaceHolders : IPrestationOperation
     private readonly object data;
 
     // Regular expression to find placeholders {{Name:Format}}
-    [GeneratedRegex(@"{{(.*?)(:(.*?))?}}", RegexOptions.None, "en-US")]
+    [GeneratedRegex(@"{{(.*?)(:(.*?))?}}", RegexOptions.None)]
     private static partial Regex PlaceholderRegex();
 
     public FillPlaceHolders(object data)
