@@ -2,9 +2,14 @@
 using SlideAssembler;
 using System.Text.RegularExpressions;
 
-public class FillPlaceHolders : IPrestationOperation
+
+public partial class FillPlaceHolders : IPrestationOperation
 {
     private readonly object data;
+
+    // Regular expression to find placeholders {{Name:Format}}
+    [GeneratedRegex(@"{{(.*?)(:(.*?))?}}", RegexOptions.None, "en-US")]
+    private static partial Regex PlaceholderRegex();
 
     public FillPlaceHolders(object data)
     {
@@ -27,9 +32,8 @@ public class FillPlaceHolders : IPrestationOperation
 
     private string ReplacePlaceholders(string text, object data)
     {
-        // Regular expression to find placeholders {{Name:Format}}
-        var regex = new Regex(@"{{(.*?)(:(.*?))?}}");
-        var matches = regex.Matches(text);
+        
+        var matches = PlaceholderRegex().Matches(text);
 
         foreach (Match match in matches)
         {
