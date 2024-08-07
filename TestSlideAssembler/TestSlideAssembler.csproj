@@ -10,7 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Not_a_PowerPoint.txt" />
     <None Remove="Template.pptx" />
+    <None Remove="Template_missing_Placeholders.pptx" />
     <None Remove="verificationfiles\slide-1.verified.png" />
     <None Remove="verificationfiles\slide-2.verified.png" />
     <None Remove="verificationfiles\Template.pptx" />
@@ -33,7 +35,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Not_a_PowerPoint.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Template.pptx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Template_missing_Placeholders.pptx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="verificationfiles\slide-1.verified.png">
