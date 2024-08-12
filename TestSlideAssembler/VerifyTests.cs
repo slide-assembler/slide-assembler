@@ -86,7 +86,7 @@ namespace TestSlideAssembler
                     //==================================================================================================================================================================
 
                     SlideAssembler.SlideAssembler.Load(template)
-                                .Apply(new FillPlaceHolders(data))
+                                .Apply(new FillPlaceholders(data))
                                 .Save(output);
                 }
             }

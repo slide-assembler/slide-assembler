@@ -22,7 +22,6 @@ public partial class FillPlaceholders : IPresentationOperation
         {
             foreach (var textFrame in slide.TextFrames())
             {
-
                 var text = textFrame.Text;
                 var newText = ReplacePlaceholders(text, data);
                 textFrame.Text = newText;
@@ -74,7 +73,7 @@ public partial class FillPlaceholders : IPresentationOperation
 
         foreach (var property in properties)
         {
-            if (currentObject == null) return null;
+            if (currentObject == null) throw new InvalidDataException("Data cant be null or empty!");
 
             var propertyInfo = currentObject.GetType().GetProperty(property.Trim());
             if (propertyInfo == null) return null;

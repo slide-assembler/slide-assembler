@@ -65,7 +65,6 @@ public class SlideAssembler
         if (stream == null) throw new ArgumentNullException("Stream can´t be null.");
         try
         {
-
             presentation.SaveAs(stream);
         }
         catch (InvalidDataException ex)
@@ -75,7 +74,7 @@ public class SlideAssembler
 
     }
 
-    public SlideAssembler Apply(params IPresentationOperation[] operations) // applies changes and get the updatet Presentation
+    public SlideAssembler Apply(params IPresentationOperation[] operations) // applies changes and get the updated Presentation
     {
         foreach (var operation in operations)
         {

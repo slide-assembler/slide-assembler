@@ -7,7 +7,7 @@ using ShapeCrawler;
 
 namespace SlideAssembler
 {
-    internal interface IPresentationOperation
+    public interface IPresentationOperation
     {
         void Apply(Presentation presentation);
     }

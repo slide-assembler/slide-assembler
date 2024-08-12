@@ -73,6 +73,7 @@ namespace TestSlideAssembler
         }
 
         [TestMethod]
+        [ExpectedException(typeof(InvalidDataException))]
         public void NullObjectTest()
         {
             using var template = File.OpenRead("Template.pptx");
@@ -92,7 +93,7 @@ namespace TestSlideAssembler
         private void GeneratePresentation(FileStream template, dynamic data, FileStream output)
         {
             SlideAssembler.SlideAssembler.Load(template)
-                        .Apply(new FillPlaceHolders(data))
+                        .Apply(new FillPlaceholders(data))
                         .Save(output);
         }
     }
