@@ -1,19 +1,24 @@
 ﻿using ShapeCrawler;
 using SlideAssembler;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 
 public partial class FillPlaceholders : IPresentationOperation
 {
     private readonly object data;
+    private bool ignoreMissingData;
+    private bool caseSensitive;
 
     // Regular expression to find placeholders {{Name:Format}}
     [GeneratedRegex(@"{{(.*?)(:(.*?))?}}", RegexOptions.None)]
     private static partial Regex PlaceholderRegex();
 
-    public FillPlaceholders(object data)
+    public FillPlaceholders(object data, bool ignoreMissingData = false, bool caseSensitive = false)
     {
         this.data = data;
+        this.ignoreMissingData = ignoreMissingData;
+        this.caseSensitive = caseSensitive;
     }
 
     public void Apply(Presentation presentation)
@@ -73,9 +78,14 @@ public partial class FillPlaceholders : IPresentationOperation
 
         foreach (var property in properties)
         {
-            if (currentObject == null) throw new InvalidDataException("Data cant be null or empty!");
+            if (currentObject == null)
+            {
+                if (ignoreMissingData) return null;
+                throw new InvalidDataException("Data cant be null or empty!");
+            }
 
             var propertyInfo = currentObject.GetType().GetProperty(property.Trim());
+
             if (propertyInfo == null) return null;
 
             currentObject = propertyInfo.GetValue(currentObject);

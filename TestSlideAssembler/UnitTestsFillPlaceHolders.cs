@@ -93,7 +93,7 @@ namespace TestSlideAssembler
         private void GeneratePresentation(FileStream template, dynamic data, FileStream output)
         {
             SlideAssembler.SlideAssembler.Load(template)
-                        .Apply(new FillPlaceholders(data))
+                        .Apply(new FillPlaceholders(data, false))
                         .Save(output);
         }
     }

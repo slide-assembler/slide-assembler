@@ -71,7 +71,7 @@ namespace TestSlideAssembler
 
                     var data = new
                     {
-                        Titel = $"Messwerte vom {DateTime.Now:d}",
+                        Titel = $"Messwerte vom 07.08.2024",
                         Benutzer = new
                         {
                             Vorname = "Max",
