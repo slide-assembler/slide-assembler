@@ -17,14 +17,7 @@ public class SlideAssembler
         if (!IsPowerPointStream(stream))
             throw new FileLoadException("The File given is not a Powerpoint Presentation!");
 
-        try
-        {
-            return new SlideAssembler(new Presentation(stream));
-        }
-        catch (InvalidDataException ex)
-        {
-            throw ex;
-        }
+        return new SlideAssembler(new Presentation(stream));
 
     }
 
