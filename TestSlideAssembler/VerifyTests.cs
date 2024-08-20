@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing.Imaging;
-using System.IO;
+﻿using System.Drawing.Imaging;
 using Spire.Presentation;
-using System.Security.AccessControl;
-using Newtonsoft.Json;
-using System.Text.Json;
 
 namespace TestSlideAssembler
 {
@@ -71,7 +62,7 @@ namespace TestSlideAssembler
 
                     var data = new
                     {
-                        Titel = $"Messwerte vom 07.08.2024",
+                        Titel = $"Messwerte vom {new DateTime(2024, 8, 7):d}",
                         Benutzer = new
                         {
                             Vorname = "Max",
