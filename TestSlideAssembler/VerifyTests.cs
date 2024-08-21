@@ -1,4 +1,5 @@
-﻿using Syncfusion.PresentationRenderer;
+﻿using System.Globalization;
+using Syncfusion.PresentationRenderer;
 
 namespace TestSlideAssembler
 {
@@ -17,6 +18,8 @@ namespace TestSlideAssembler
         [TestMethod]
         public async Task TestGeneratedPresentation()
         {
+            CultureInfo.CurrentCulture = CultureInfo.CurrentUICulture = new CultureInfo("de-AT");
+
             using var stream = new MemoryStream();
             GeneratePowerpointWithAllFeatures(stream);
             stream.Position = 0;
