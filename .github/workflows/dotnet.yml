@@ -26,9 +26,11 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
-      continue-on-error: true
-    - name: Upload
-      uses: actions/upload-artifact@v4.3.6
-      with:
-        path: "D:\\a\\library-slide-assembler\\library-slide-assembler\\TestSlideAssembler\\verificationfiles\\*.png"
+
+# uncomment the following lines to debug verification tests:
+#      continue-on-error: true # set this to true 
+#    - name: Upload
+#      uses: actions/upload-artifact@v4.3.6
+#      with:
+#        path: "D:\\a\\library-slide-assembler\\library-slide-assembler\\TestSlideAssembler\\verificationfiles\\*.png"
         
