@@ -34,16 +34,14 @@ namespace TestSlideAssembler
             }
 
             using var presentation = Syncfusion.Presentation.Presentation.Open(stream);
-            foreach (var slide in presentation.Slides)
+            presentation.PresentationRenderer = new PresentationRenderer();
+            var slides = presentation.RenderAsImages(Syncfusion.Presentation.ExportImageFormat.Png);
+
+            for (int i = 0; i < slides.Length; i++)
             {
-                presentation.PresentationRenderer = new PresentationRenderer();
-
-                using var slideStream = slide.ConvertToImage(Syncfusion.Presentation.ExportImageFormat.Png);
-                slideStream.Position = 0;
-
-                await Verify(slideStream, "png")
+                await Verify(slides[i], "png")
                     .UseDirectory(verificationDirectory)
-                    .UseFileName("slide-" + slide.SlideNumber);
+                    .UseFileName("slide-" + (i + 1));
             }
         }
 
