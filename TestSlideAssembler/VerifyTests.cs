@@ -1,5 +1,5 @@
-﻿using System.Drawing.Imaging;
-using Spire.Presentation;
+﻿using System.Globalization;
+using Syncfusion.PresentationRenderer;
 
 namespace TestSlideAssembler
 {
@@ -18,68 +18,60 @@ namespace TestSlideAssembler
         [TestMethod]
         public async Task TestGeneratedPresentation()
         {
-            GeneratePowerpointWithAllFeatures();
-            await VerifyAllSlides();
+            CultureInfo.CurrentCulture = CultureInfo.CurrentUICulture = new CultureInfo("de-AT");
+
+            using var stream = new MemoryStream();
+            GeneratePowerpointWithAllFeatures(stream);
+            stream.Position = 0;
+            await VerifyAllSlides(stream);
         }
 
-        private async Task VerifyAllSlides()
+        private async Task VerifyAllSlides(Stream stream)
         {
             if (!Directory.Exists(verificationDirectory))
             {
                 Directory.CreateDirectory(verificationDirectory);
             }
 
-            using (Spire.Presentation.Presentation presentation = new Presentation())
+            using var presentation = Syncfusion.Presentation.Presentation.Open(stream);
+            presentation.PresentationRenderer = new PresentationRenderer();
+            var slides = presentation.RenderAsImages(Syncfusion.Presentation.ExportImageFormat.Png);
+
+            for (int i = 0; i < slides.Length; i++)
             {
-                presentation.LoadFromFile("verify-tests-Output.pptx", FileFormat.Auto);
-
-                foreach (ISlide slide in presentation.Slides)
-                {
-                    var image = slide.SaveAsImage();
-
-                    using (var imageStream = new MemoryStream())
-                    {
-                        image.Save(imageStream, ImageFormat.Png);
-                        imageStream.Position = 0;
-
-                        await Verify(imageStream, "png")
-                            .UseDirectory(verificationDirectory)
-                            .UseFileName("slide-" + slide.SlideNumber);       //expecting all slide-xy.verified.png pictures are already there
-                    }
-                }
+                await Verify(slides[i], "png")
+                    .UseDirectory(verificationDirectory)
+                    .UseFileName("slide-" + (i + 1));
             }
         }
 
-        private void GeneratePowerpointWithAllFeatures()    //uses SlideAssembler to create a Presentation with all its features 
+        private void GeneratePowerpointWithAllFeatures(Stream stream)    //uses SlideAssembler to create a Presentation with all its features 
         {
             using (var template = File.OpenRead(Path.Combine(verificationDirectory, powerpointTemplate)))
             {
-                using (var output = new FileStream("verify-tests-Output.pptx", FileMode.Create, FileAccess.ReadWrite))
+                //====================================================Data for Powerpoint generation (has to match the template)====================================================
+
+                var values = new[] { 0.82, 0.88, 0.64, 0.79, 0.31 };
+
+                var data = new
                 {
-                    //====================================================Data for Powerpoint generation (has to match the template)====================================================
-
-                    var values = new[] { 0.82, 0.88, 0.64, 0.79, 0.31 };
-
-                    var data = new
+                    Titel = $"Messwerte vom {new DateTime(2024, 8, 7):d}",
+                    Benutzer = new
                     {
-                        Titel = $"Messwerte vom {new DateTime(2024, 8, 7):d}",
-                        Benutzer = new
-                        {
-                            Vorname = "Max",
-                            Nachname = "Mustermann"
-                        },
-                        Minimum = values.Min(),
-                        Mittelwert = values.Average(),
-                        Maximum = values.Max(),
-                        Werte = values
-                    };
+                        Vorname = "Max",
+                        Nachname = "Mustermann"
+                    },
+                    Minimum = values.Min(),
+                    Mittelwert = values.Average(),
+                    Maximum = values.Max(),
+                    Werte = values
+                };
 
-                    //==================================================================================================================================================================
+                //==================================================================================================================================================================
 
-                    SlideAssembler.SlideAssembler.Load(template)
-                                .Apply(new FillPlaceholders(data))
-                                .Save(output);
-                }
+                SlideAssembler.SlideAssembler.Load(template)
+                            .Apply(new FillPlaceholders(data))
+                            .Save(stream);
             }
         }
     }
