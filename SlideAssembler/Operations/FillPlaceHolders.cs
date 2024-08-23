@@ -45,14 +45,13 @@ public partial class FillPlaceholders : IPresentationOperation
             {
                 // Apply formatting if specified
                 string formattedValue;
-                if (!string.IsNullOrEmpty(format))
+                if (!string.IsNullOrEmpty(format) && value is IFormattable formattable)
                 {
-                    double val = Convert.ToDouble(value);
-                    formattedValue = val.ToString(format.Trim());
+                    formattedValue = formattable.ToString(format.Trim(), null);
                 }
                 else
                 {
-                    formattedValue = value.ToString();
+                    formattedValue = value?.ToString() ?? string.Empty;
                 }
 
                 // replace the placeholder with the formatted value  
@@ -64,7 +63,7 @@ public partial class FillPlaceholders : IPresentationOperation
         return text;
     }
 
-    private object GetDataValue(object data, string placeholder)
+    private object? GetDataValue(object data, string placeholder)
     {
 
         var properties = placeholder.Split('.');
@@ -78,7 +77,7 @@ public partial class FillPlaceholders : IPresentationOperation
             var propertyInfo = currentObject.GetType().GetProperty(property.Trim());
             if (propertyInfo == null) return null;
 
-            currentObject = propertyInfo.GetValue(currentObject);
+            currentObject = propertyInfo.GetValue(currentObject) ?? throw new InvalidDataException("Property value cannot be null.");
         }
 
         return currentObject;
