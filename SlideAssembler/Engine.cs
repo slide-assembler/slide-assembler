@@ -2,12 +2,14 @@
 
 namespace SlideAssembler;
 
-
 public class SlideAssembler
 {
     private readonly Presentation presentation;
 
-    private SlideAssembler(Presentation presentation) { this.presentation = presentation; }
+    private SlideAssembler(Presentation presentation)
+    {
+        this.presentation = presentation;
+    }
 
     public static SlideAssembler Load(Stream stream) // load Presentation from stream
     {
@@ -56,15 +58,8 @@ public class SlideAssembler
     public void Save(Stream stream) // save Presentation in stream 
     {
         if (stream == null) throw new ArgumentNullException("Stream can´t be null.");
-        try
-        {
-            presentation.SaveAs(stream);
-        }
-        catch (InvalidDataException ex)
-        {
-            throw ex;
-        }
-
+        
+        presentation.SaveAs(stream);
     }
 
     public SlideAssembler Apply(params IPresentationOperation[] operations) // applies changes and get the updated Presentation
@@ -73,6 +68,7 @@ public class SlideAssembler
         {
             operation.Apply(this.presentation);
         }
+        
         return this;
     }
 }

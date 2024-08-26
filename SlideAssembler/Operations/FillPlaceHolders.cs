@@ -1,8 +1,6 @@
 ﻿using ShapeCrawler;
 using SlideAssembler;
-using System.Reflection;
 using System.Text.RegularExpressions;
-
 
 public partial class FillPlaceholders : IPresentationOperation
 {
