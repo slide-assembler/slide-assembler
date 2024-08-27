@@ -68,7 +68,7 @@ public partial class FillPlaceholders : IPresentationOperation
     {
 
         var properties = placeholder.Split('.');
-        object currentObject = data;
+        object? currentObject = data;
 
 
         foreach (var property in properties)
