@@ -9,7 +9,7 @@ namespace TestSlideAssembler
         [TestMethod]
         public void StandartTest()
         {
-            var values = new[] { 0.82, 0.88, 0.64, 0.79, 0.31 };
+            var values = new[] { 82, 88, 64, 79, 31 };
 
             // Platzhalter
             var data = new
@@ -34,14 +34,14 @@ namespace TestSlideAssembler
             slideAssembler = slideAssembler.Apply(new FillPlaceHolders(data));
             slideAssembler.Apply(new SetWidth("MittelwertRechteck", (Decimal)data.Mittelwert))
                 .Apply(new SetWidth("MaximumRechteck", (Decimal)data.Maximum))
-                .Apply(new SetWidth("MaximumRechteck", (Decimal)data.Minimum))
+                .Apply(new SetWidth("MinimumRechteck", (Decimal)data.Minimum))
                 .Save(output);
         }
 
         [TestMethod]
         public void NullPlaceholderTest()
         {
-            var values = new[] { 0.82, 0.88, 0.64, 0.79, 0.31 };
+            var values = new[] { 82, 88, 64, 79, 31 };
 
             // Platzhalter
             var data = new
