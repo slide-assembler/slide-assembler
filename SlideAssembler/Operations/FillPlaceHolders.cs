@@ -70,7 +70,7 @@ public partial class FillPlaceholders : IPresentationOperation
     {
 
         var properties = placeholder.Split('.');
-        object currentObject = data;
+        object? currentObject = data;
 
 
         foreach (var property in properties)
@@ -85,7 +85,7 @@ public partial class FillPlaceholders : IPresentationOperation
 
             if (propertyInfo == null) return null;
 
-            currentObject = propertyInfo.GetValue(currentObject) ?? throw new InvalidDataException("Property value cannot be null.");
+            currentObject = propertyInfo.GetValue(currentObject);
         }
 
         return currentObject;
