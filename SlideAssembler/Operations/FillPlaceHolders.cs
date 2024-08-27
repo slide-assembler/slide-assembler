@@ -6,17 +6,15 @@ public partial class FillPlaceholders : IPresentationOperation
 {
     private readonly object data;
     private bool ignoreMissingData;
-    private bool caseSensitive;
 
     // Regular expression to find placeholders {{Name:Format}}
     [GeneratedRegex(@"{{(.*?)(:(.*?))?}}", RegexOptions.None)]
     private static partial Regex PlaceholderRegex();
 
-    public FillPlaceholders(object data, bool ignoreMissingData = false, bool caseSensitive = false)
+    public FillPlaceholders(object data, bool ignoreMissingData = false)
     {
         this.data = data;
         this.ignoreMissingData = ignoreMissingData;
-        this.caseSensitive = caseSensitive;
     }
 
     public void Apply(Presentation presentation)
@@ -32,7 +30,7 @@ public partial class FillPlaceholders : IPresentationOperation
         }
     }
 
-    private string ReplacePlaceholders(string text, object data)
+    public string ReplacePlaceholders(string text, object data)
     {
         var matches = PlaceholderRegex().Matches(text);
 
@@ -66,7 +64,7 @@ public partial class FillPlaceholders : IPresentationOperation
         return text;
     }
 
-    private object? GetDataValue(object data, string placeholder)
+    public object? GetDataValue(object data, string placeholder)
     {
 
         var properties = placeholder.Split('.');
@@ -83,9 +81,10 @@ public partial class FillPlaceholders : IPresentationOperation
 
             var propertyInfo = currentObject.GetType().GetProperty(property.Trim());
 
-            if (propertyInfo == null) return null;
+            if (propertyInfo == null && ignoreMissingData) return null;
+            if (propertyInfo == null) throw new InvalidDataException("Missing Data!");
 
-            currentObject = propertyInfo.GetValue(currentObject) ?? throw new InvalidDataException("Property value cannot be null.");
+            currentObject = propertyInfo.GetValue(currentObject);
         }
 
         return currentObject;

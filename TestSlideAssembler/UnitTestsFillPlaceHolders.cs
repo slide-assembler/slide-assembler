@@ -1,3 +1,12 @@
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Vml;
+using DocumentFormat.OpenXml.Vml.Presentation;
+using HarfBuzzSharp;
+using System.Data;
+using System.Globalization;
+using System.Text.RegularExpressions;
+
 namespace TestSlideAssembler
 {
     [TestClass]
@@ -27,49 +36,77 @@ namespace TestSlideAssembler
             GeneratePresentation(template, data, output);
         }
 
-        [TestMethod]
-        public void MissingDataTest()
+        [DataTestMethod]
+        [DataRow("de-AT", "xyz 5,32")]
+        [DataRow("en-US", "xyz 5.32")]
+        public void TestDoubleFormat_ReplacePlaceholders(string culture, string expected)
         {
-            var values = new[] { 0.82, 0.88, 0.64};
+            CultureInfo.CurrentCulture = CultureInfo.CurrentUICulture = new CultureInfo(culture);
 
-            var data = new
-            {
-                Titel = $"Messwerte vom {DateTime.Now:d}",
-                Benutzer = new
-                {
-                    Vorname = "Max"
-                },
-                Minimum = values.Min(),
-                Werte = values
-            };
+            var data = new { MyProperty = 5.321 };
+            var operation = new FillPlaceholders(data);
+            var result = operation.ReplacePlaceholders("xyz {{MyProperty:N2}}", data);
 
-            using var template = File.OpenRead("Template.pptx");
-            using var output = new FileStream("Output_missing_Data.pptx", FileMode.Create, FileAccess.ReadWrite);
-            GeneratePresentation(template, data, output);
+            Assert.AreEqual(expected, result);
         }
 
         [TestMethod]
-        public void MissingPlaceholdersTest()
+        public void MissingDataTest_ReplacePlaceholders()
         {
-            var values = new[] { 0.82, 0.88, 0.64, 0.79, 0.31 };
+            CultureInfo.CurrentCulture = CultureInfo.CurrentUICulture = new CultureInfo("de-AT");
 
             var data = new
             {
-                Titel = $"Messwerte vom {DateTime.Now:d}",
-                Benutzer = new
-                {
-                    Vorname = "Max",
-                    Nachname = "Mustermann"
-                },
-                Minimum = values.Min(),
-                Mittelwert = values.Average(),
-                Maximum = values.Max(),
-                Werte = values
+                name = "Max Mustermann",
+                salary = 521.23
             };
 
-            using var template = File.OpenRead("Template_missing_Placeholders.pptx");
-            using var output = new FileStream("Output_missing_Placeholders.pptx", FileMode.Create, FileAccess.ReadWrite);
-            GeneratePresentation(template, data, output);
+            var operation = new FillPlaceholders(data, true);
+            var result = operation.ReplacePlaceholders("Hello my name is {{name}}, i live in {{address}} and i earn {{salary:N2}}", data);
+
+            Assert.AreEqual("Hello my name is Max Mustermann, i live in {{address}} and i earn 521,23",result);
+        }
+
+        [TestMethod]
+        [DataRow("{{name}}, {{age}}, {{salary}}$", "Max Mustermann, 18, 718$")]
+        [DataRow("", "")]
+        [DataRow("{{name}}, {{salary}}$", "Max Mustermann, 718$")]
+        public void MissingPlaceholdersTest(string placeholders, string expected)
+        {
+            var data = new
+            {
+                name = "Max Mustermann",
+                age = 18,
+                salary = 718
+            };
+                
+            var operation = new FillPlaceholders(data);
+            var result = operation.ReplacePlaceholders(placeholders, data);
+
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
+        public void IgnoreMissingData_GetDataValue(bool ignoreMissingData)
+        {
+            string placeholder = "{{name}}, {{age}}";
+            var data = new
+            {
+                name = "Max Mustermann",
+            };
+
+            var operation = new FillPlaceholders(data, ignoreMissingData);
+
+            if(!ignoreMissingData)
+            {
+                Assert.ThrowsException<InvalidDataException>(() => operation.GetDataValue(data, placeholder));
+            }
+            else
+            {
+                Assert.AreEqual(null, operation.GetDataValue(data, placeholder));
+            }
         }
 
         [TestMethod]
