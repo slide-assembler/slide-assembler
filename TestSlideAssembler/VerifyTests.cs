@@ -1,5 +1,5 @@
-﻿using System.Globalization;
-using Syncfusion.PresentationRenderer;
+﻿using Syncfusion.PresentationRenderer;
+using System.Globalization;
 
 namespace TestSlideAssembler
 {
@@ -71,7 +71,7 @@ namespace TestSlideAssembler
 
                 SlideAssembler.SlideAssembler.Load(template)
                             .Apply(new FillPlaceholders(data))
-                            .Save(stream);
+                           .Apply(new FillChart(data, true)).Save(stream);
             }
         }
     }
