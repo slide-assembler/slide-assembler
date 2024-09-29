@@ -43,16 +43,18 @@ namespace TestSlideAssembler
         [TestMethod]
         [ExpectedException(typeof(InvalidDataException))]
         [DataRow(-1)]
-        [DataRow(0)]
-        public void DecimalNotValidTest(int decimalnumber)
+        [DataRow(-0.1)]
+        public void DecimalNotValidTest(double decimalnumber)
         {
             SetWidth feature = new SetWidth("shape", (Decimal)decimalnumber);
         }
 
         [TestMethod]
-        public void DecimalValidTest()
+        [DataRow(0)]
+        [DataRow(123)]
+        public void DecimalValidTest(double decimalnumber)
         {
-            SetWidth feature = new SetWidth("shape", (Decimal) 0.1);
+            SetWidth feature = new SetWidth("shape", (Decimal)decimalnumber);
         }
 
 

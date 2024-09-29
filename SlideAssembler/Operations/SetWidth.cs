@@ -10,7 +10,7 @@ public class SetWidth : IPrestationOperation
     public SetWidth(string name, decimal data)
     {
         this.name = name;
-        if (data != null && data > 0) this.data = data;
+        if (data != null && data >= 0) this.data = data;
         else throw new InvalidDataException("Width of Shape has to be > 0");
         
     }
