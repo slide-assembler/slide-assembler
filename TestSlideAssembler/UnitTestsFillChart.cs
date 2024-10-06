@@ -24,14 +24,14 @@
 
             using var template = File.OpenRead("Template.pptx");
             using var output = new FileStream("Output.pptx", FileMode.Create, FileAccess.ReadWrite);
-            GeneratePresentation(template, data, output);
+            GeneratePresentation(template, values, output);
 
 
         }
-        private void GeneratePresentation(FileStream template, dynamic data, FileStream output)
+        private void GeneratePresentation(FileStream template, double[] values, FileStream output)
         {
             SlideAssembler.SlideAssembler.Load(template)
-                        .Apply(new FillChart(data, false))
+                        .Apply(new FillChart("MesswertDiagramm", new Series("Werte", values), false))
                         .Save(output);
         }
     }

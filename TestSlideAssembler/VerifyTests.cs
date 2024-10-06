@@ -70,8 +70,10 @@ namespace TestSlideAssembler
                 //==================================================================================================================================================================
 
                 SlideAssembler.SlideAssembler.Load(template)
-                            .Apply(new FillPlaceholders(data))
-                           .Apply(new FillChart(data, true)).Save(stream);
+                            .Apply(new FillPlaceholders(data)).Apply(new FillChart("MesswertDiagramm", new Series("Werte", values)))
+                            .Save(stream);
+
+
             }
         }
     }

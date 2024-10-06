@@ -1,15 +1,27 @@
-﻿using ShapeCrawler;
+﻿
+using ShapeCrawler;
 using SlideAssembler;
 
 
-public class FillChart : IPresentationOperation
+
+public partial class FillChart : IPresentationOperation
 {
-    private readonly object data;
+    private string chartTitle;
+    private Series[] seriesList;
     private bool ignoreMissingData;
 
-    public FillChart(object data, bool ignoreMissingData = false)
+
+    public FillChart(string chartTitle, Series[] seriesList, bool ignoreMissingData = false)
     {
-        this.data = data;
+        this.chartTitle = chartTitle;
+        this.seriesList = seriesList;
+        this.ignoreMissingData = ignoreMissingData;
+    }
+
+    public FillChart(string chartTitle, Series singleSeries, bool ignoreMissingData = false)
+    {
+        this.chartTitle = chartTitle;
+        this.seriesList = [singleSeries];
         this.ignoreMissingData = ignoreMissingData;
     }
 
@@ -19,7 +31,7 @@ public class FillChart : IPresentationOperation
         {
             foreach (var shape in slide.Shapes)
             {
-                if (shape is IChart)
+                if (shape is IChart && shape.Name == chartTitle)
                 {
                     CompleteChart((IChart)shape);
                 }
@@ -29,47 +41,22 @@ public class FillChart : IPresentationOperation
 
     private void CompleteChart(IChart chart)
     {
-        foreach (var series in chart.SeriesList)
+        for (int i = 0; i < seriesList.Length; i++)
         {
-            for (int i = 0; i < series.Points.Count; i++)
+            var series = seriesList[i];
+            var chartSeries = chart.SeriesList[i];
+            if (chartSeries.Name == series.name)
             {
-                var point = series.Points[i];
-                string name = chart.Categories[i].Name;
-
-                var value = GetDataValue(data, name);
-                if (value == null)
+                for (int pointIndex = 0; pointIndex < series.values.Length; pointIndex++)
                 {
-                    value = 0.0;
+                    if (pointIndex < chartSeries.Points.Count)
+                    {
+                        chartSeries.Points[pointIndex].Value = (double)series.values[pointIndex];
+                    }
                 }
-                point.Value = (double)value;
             }
         }
-    }
 
-    public object? GetDataValue(object data, string placeholder)
-    {
-
-        var properties = placeholder.Split('.');
-        object? currentObject = data;
-
-
-        foreach (var property in properties)
-        {
-            if (currentObject == null)
-            {
-                if (ignoreMissingData) return null;
-                throw new InvalidDataException("Data cant be null or empty!");
-            }
-
-            var propertyInfo = currentObject.GetType().GetProperty(property.Trim());
-
-            if (propertyInfo == null && ignoreMissingData) return null;
-            if (propertyInfo == null) throw new InvalidDataException("Missing Data!");
-
-            currentObject = propertyInfo.GetValue(currentObject);
-        }
-
-        return currentObject;
     }
 
 }
