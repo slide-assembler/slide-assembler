@@ -2,7 +2,7 @@
 using SlideAssembler;
 using System.Text.RegularExpressions;
 
-public partial class FillPlaceHolders : IPresentationOperation
+public partial class FillPlaceholders : IPresentationOperation
 {
     private readonly object data;
     private bool ignoreMissingData;
@@ -11,7 +11,7 @@ public partial class FillPlaceHolders : IPresentationOperation
     [GeneratedRegex(@"{{(.*?)(:(.*?))?}}", RegexOptions.None)]
     private static partial Regex PlaceholderRegex();
 
-    public FillPlaceHolders(object data, bool ignoreMissingData = false)
+    public FillPlaceholders(object data, bool ignoreMissingData = false)
     {
         this.data = data;
         this.ignoreMissingData = ignoreMissingData;
