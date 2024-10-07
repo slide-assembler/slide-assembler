@@ -2,7 +2,7 @@
 using SlideAssembler;
 
 
-public class SetWidth : IPrestationOperation
+public class SetWidth : IPresentationOperation
 {
     private readonly string name;
     private decimal data;
