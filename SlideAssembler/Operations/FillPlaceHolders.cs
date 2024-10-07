@@ -2,7 +2,7 @@
 using SlideAssembler;
 using System.Text.RegularExpressions;
 
-public class FillPlaceHolders : IPresentationOperation
+public partial class FillPlaceHolders : IPresentationOperation
 {
     private readonly object data;
     private bool ignoreMissingData;
