@@ -11,7 +11,7 @@ public partial class FillPlaceHolders : IPresentationOperation
     [GeneratedRegex(@"{{(.*?)(:(.*?))?}}", RegexOptions.None)]
     private static partial Regex PlaceholderRegex();
 
-    public FillPlaceholders(object data, bool ignoreMissingData = false)
+    public FillPlaceHolders(object data, bool ignoreMissingData = false)
     {
         this.data = data;
         this.ignoreMissingData = ignoreMissingData;
