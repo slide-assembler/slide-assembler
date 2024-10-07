@@ -33,7 +33,7 @@ namespace TestSlideAssembler
 
             SlideAssembler.SlideAssembler slideAssembler = SlideAssembler.SlideAssembler.Load(template);
 
-            slideAssembler = slideAssembler.Apply(new FillPlaceHolders(data));
+            slideAssembler = slideAssembler.Apply(new FillPlaceholders(data));
             slideAssembler.Apply(new SetWidth("MittelwertRechteck", (Decimal)data.Mittelwert))
                 .Apply(new SetWidth("MaximumRechteck", (Decimal)data.Maximum))
                 .Apply(new SetWidth("MinimumRechteck", (Decimal)data.Minimum))
