@@ -51,7 +51,7 @@ namespace TestSlideAssembler
             {
                 //====================================================Data for Powerpoint generation (has to match the template)====================================================
 
-                var values = new[] { 0.82, 0.88, 0.64, 0.79, 0.31 };
+                var values = new[] { 82, 88, 64, 79, 31 };
 
                 var data = new
                 {
@@ -71,6 +71,9 @@ namespace TestSlideAssembler
 
                 SlideAssembler.SlideAssembler.Load(template)
                             .Apply(new FillPlaceholders(data))
+                            .Apply(new SetWidth("MittelwertRechteck", (Decimal)data.Mittelwert))
+                            .Apply(new SetWidth("MaximumRechteck", (Decimal)data.Maximum))
+                            .Apply(new SetWidth("MinimumRechteck", (Decimal)data.Minimum))
                             .Save(stream);
             }
         }
