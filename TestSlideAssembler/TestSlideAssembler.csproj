@@ -43,6 +43,9 @@
     <EmbeddedResource Include="Template_missing_Placeholders.pptx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="verificationfiles\slide-1.verified.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="verificationfiles\slide-2.verified.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
