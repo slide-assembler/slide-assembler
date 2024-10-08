@@ -68,12 +68,11 @@ namespace TestSlideAssembler
                 };
 
                 //==================================================================================================================================================================
-
+                Series[] seriesList = [new Series("Datenreihe 1", values), new Series("Datenreihe 2", [0.88, 0.8, 0.62, 0.75])];
                 SlideAssembler.SlideAssembler.Load(template)
                             .Apply(new FillPlaceholders(data)).Apply(new FillChart("MesswertDiagramm", new Series("Werte", values)))
+                            .Apply(new FillChart("LineChart", seriesList))
                             .Save(stream);
-
-
             }
         }
     }
