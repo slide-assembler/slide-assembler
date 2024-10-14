@@ -13,15 +13,14 @@
     <None Remove="Not_a_PowerPoint.txt" />
     <None Remove="Template.pptx" />
     <None Remove="Template_missing_Placeholders.pptx" />
-    <None Remove="verificationfiles\slide-1.verified.png" />
     <None Remove="verificationfiles\slide-2.verified.png" />
     <None Remove="verificationfiles\Template.pptx" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.5.0" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.5.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.5.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.5.1" />
     <PackageReference Include="coverlet.collector" Version="6.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
