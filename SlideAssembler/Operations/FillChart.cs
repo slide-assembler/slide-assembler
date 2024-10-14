@@ -43,31 +43,43 @@ public partial class FillChart : IPresentationOperation
         }
     }
 
-    private void CompleteChart(IChart chart)
+    public void CompleteChart(IChart chart)
     {
         bool seriesFound = false;
 
         for (int i = 0; i < seriesList.Length; i++)
         {
-            var series = seriesList[i];
-            var chartSeries = chart.SeriesList.FirstOrDefault(s => s.Name == series.name);
-
-            if (chartSeries != null)
+            if (seriesList[i] == null && !ignoreMissingData)
             {
-                seriesFound = true;
-                for (int pointIndex = 0; pointIndex < series.values.Length; pointIndex++)
+                throw new NullReferenceException("Series cannot be null!");
+            }
+            else if (seriesList[i] == null)
+            {
+                i++;
+            }
+            else
+            {
+                var series = seriesList[i];
+
+                var chartSeries = chart.SeriesList.FirstOrDefault(s => s.Name == series.name);
+
+                if (chartSeries != null)
                 {
-                    if (pointIndex < chartSeries.Points.Count)
+                    seriesFound = true;
+                    for (int pointIndex = 0; pointIndex < series.values.Length; pointIndex++)
                     {
-                        chartSeries.Points[pointIndex].Value = (double)series.values[pointIndex];
+                        if (pointIndex < chartSeries.Points.Count)
+                        {
+                            chartSeries.Points[pointIndex].Value = (double)series.values[pointIndex];
+                        }
                     }
                 }
             }
-        }
 
-        if (!seriesFound && !ignoreMissingData)
-        {
-            throw new InvalidDataException($"Serie(n) in Chart '{chartTitle}' wurden nicht gefunden.");
+            if (!seriesFound && !ignoreMissingData)
+            {
+                throw new InvalidDataException($"Serie(n) in Chart '{chartTitle}' wurden nicht gefunden.");
+            }
         }
     }
 }
