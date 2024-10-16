@@ -2,13 +2,19 @@
 using SlideAssembler;
 using System.Text.RegularExpressions;
 
-public class FillPlaceHolders : IPresentationOperation
+public partial class FillPlaceholders : IPresentationOperation
 {
     private readonly object data;
+    private bool ignoreMissingData;
 
-    public FillPlaceHolders(object data)
+    // Regular expression to find placeholders {{Name:Format}}
+    [GeneratedRegex(@"{{(.*?)(:(.*?))?}}", RegexOptions.None)]
+    private static partial Regex PlaceholderRegex();
+
+    public FillPlaceholders(object data, bool ignoreMissingData = false)
     {
         this.data = data;
+        this.ignoreMissingData = ignoreMissingData;
     }
 
     public void Apply(Presentation presentation)
@@ -17,7 +23,6 @@ public class FillPlaceHolders : IPresentationOperation
         {
             foreach (var textFrame in slide.TextFrames())
             {
-
                 var text = textFrame.Text;
                 var newText = ReplacePlaceholders(text, data);
                 textFrame.Text = newText;
@@ -25,11 +30,9 @@ public class FillPlaceHolders : IPresentationOperation
         }
     }
 
-    private string ReplacePlaceholders(string text, object data)
+    public string ReplacePlaceholders(string text, object data)
     {
-        // Regular expression to find placeholders {{Name:Format}}
-        var regex = new Regex(@"{{(.*?)(:(.*?))?}}");
-        var matches = regex.Matches(text);
+        var matches = PlaceholderRegex().Matches(text);
 
         foreach (Match match in matches)
         {
@@ -43,14 +46,13 @@ public class FillPlaceHolders : IPresentationOperation
             {
                 // Apply formatting if specified
                 string formattedValue;
-                if (!string.IsNullOrEmpty(format))
+                if (!string.IsNullOrEmpty(format) && value is IFormattable formattable)
                 {
-                    double val = Convert.ToDouble(value);
-                    formattedValue = val.ToString(format.Trim());
+                    formattedValue = formattable.ToString(format.Trim(), null);
                 }
                 else
                 {
-                    formattedValue = value.ToString();
+                    formattedValue = value?.ToString() ?? string.Empty;
                 }
 
                 // replace the placeholder with the formatted value  
@@ -62,27 +64,30 @@ public class FillPlaceHolders : IPresentationOperation
         return text;
     }
 
-    private object GetDataValue(object data, string placeholder)
+    public object? GetDataValue(object data, string placeholder)
     {
 
         var properties = placeholder.Split('.');
-        object courantObject = data;
+        object? currentObject = data;
 
 
         foreach (var property in properties)
         {
-            if (courantObject == null) return null;
+            if (currentObject == null)
+            {
+                if (ignoreMissingData) return null;
+                throw new InvalidDataException("Data cant be null or empty!");
+            }
 
+            var propertyInfo = currentObject.GetType().GetProperty(property.Trim());
 
-            var propertyInfo = courantObject.GetType().GetProperty(property.Trim());
-            if (propertyInfo == null) return null;
+            if (propertyInfo == null && ignoreMissingData) return null;
+            if (propertyInfo == null) throw new InvalidDataException("Missing Data!");
 
-
-            courantObject = propertyInfo.GetValue(courantObject);
-
+            currentObject = propertyInfo.GetValue(currentObject);
         }
 
-        return courantObject;
+        return currentObject;
     }
 
 }
