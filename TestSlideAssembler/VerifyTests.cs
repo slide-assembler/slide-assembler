@@ -68,7 +68,7 @@ namespace TestSlideAssembler
                 };
 
                 //==================================================================================================================================================================
-                Series[] seriesList = [new Series("Datenreihe 1", values), new Series("Datenreihe 2", values.Select(v=> v*2).ToArray())];
+                Series[] seriesList = [new Series("Datenreihe 1", values), new Series("Datenreihe 2", values.Select(v => v * 2).ToArray())];
                 SlideAssembler.SlideAssembler.Load(template)
                             .Apply(new FillPlaceholders(data)).Apply(new FillChart("MesswertDiagramm", new Series("Werte", values)))
                             .Apply(new SetWidth("MittelwertRechteck", (Decimal)data.Mittelwert))
@@ -76,6 +76,7 @@ namespace TestSlideAssembler
                             .Apply(new SetWidth("MinimumRechteck", (Decimal)data.Minimum))
                             .Apply(new FillChart("LineChart", seriesList))
                             .Save(stream);
+
             }
         }
     }

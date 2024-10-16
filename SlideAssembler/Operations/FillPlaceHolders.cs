@@ -25,7 +25,11 @@ public partial class FillPlaceholders : IPresentationOperation
             {
                 var text = textFrame.Text;
                 var newText = ReplacePlaceholders(text, data);
-                textFrame.Text = newText;
+                if (newText != textFrame.Text)
+                {
+                    textFrame.Text = newText;
+                }
+
             }
         }
     }
