@@ -75,6 +75,12 @@ namespace TestSlideAssembler
                             .Apply(new SetWidth("MaximumRechteck", (Decimal)data.Maximum))
                             .Apply(new SetWidth("MinimumRechteck", (Decimal)data.Minimum))
                             .Apply(new FillChart("LineChart", seriesList))
+                            .Apply(new ModifyObject("MittelwertRechteck", o =>
+                            {
+                                o.TextFrame.Text = data.Mittelwert.ToString("N2");
+                                o.Width = (Decimal)data.Mittelwert;
+                                o.Height = 10;
+                            }))
                             .Save(stream);
 
             }
