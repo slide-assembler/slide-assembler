@@ -68,10 +68,9 @@ namespace TestSlideAssembler
                 };
 
                 //==================================================================================================================================================================
-                Series[] seriesList = [new Series("Datenreihe 1", values), new Series("Datenreihe 2", new [] {0.88d, 0.8d, 0.62d, 0.75d})];
+                Series[] seriesList = [new Series("Datenreihe 1", values), new Series("Datenreihe 2", values.Select(v=> v*2).ToArray())];
                 SlideAssembler.SlideAssembler.Load(template)
                             .Apply(new FillPlaceholders(data)).Apply(new FillChart("MesswertDiagramm", new Series("Werte", values)))
-                            .Apply(new FillPlaceholders(data))
                             .Apply(new SetWidth("MittelwertRechteck", (Decimal)data.Mittelwert))
                             .Apply(new SetWidth("MaximumRechteck", (Decimal)data.Maximum))
                             .Apply(new SetWidth("MinimumRechteck", (Decimal)data.Minimum))
