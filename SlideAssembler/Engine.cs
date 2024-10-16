@@ -49,9 +49,3 @@ public class SlideAssembler
     }
 
 }
-
-public interface IPrestationOperation
-{
-    void Apply(Presentation presentation);
-}
-

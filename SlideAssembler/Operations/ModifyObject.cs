@@ -1,7 +1,7 @@
 ﻿using ShapeCrawler;
 using SlideAssembler;
 
-public class ModifyObject : IPrestationOperation
+public class ModifyObject : IPresentationOperation
 {
     private readonly string name;
     private readonly Action<IShape> action;
