@@ -51,7 +51,7 @@ namespace TestSlideAssembler
             {
                 //====================================================Data for Powerpoint generation (has to match the template)====================================================
 
-                var values = new[] { 82, 88, 64, 79, 31 };
+                var values = new[] { 82d, 88d, 64d, 79d, 31d };
 
                 var data = new
                 {
@@ -68,7 +68,7 @@ namespace TestSlideAssembler
                 };
 
                 //==================================================================================================================================================================
-                Series[] seriesList = [new Series("Datenreihe 1", values), new Series("Datenreihe 2", [0.88, 0.8, 0.62, 0.75])];
+                Series[] seriesList = [new Series("Datenreihe 1", values), new Series("Datenreihe 2", new [] {0.88d, 0.8d, 0.62d, 0.75d})];
                 SlideAssembler.SlideAssembler.Load(template)
                             .Apply(new FillPlaceholders(data)).Apply(new FillChart("MesswertDiagramm", new Series("Werte", values)))
                             .Apply(new FillPlaceholders(data))
