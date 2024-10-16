@@ -2,11 +2,11 @@
 using SlideAssembler;
 using System.Text.RegularExpressions;
 
-public class FillPlaceHolders : IPresentationOperation
+public class FillPlaceholders : IPresentationOperation
 {
     private readonly object data;
 
-    public FillPlaceHolders(object data)
+    public FillPlaceholders(object data)
     {
         this.data = data;
     }

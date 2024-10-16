@@ -39,7 +39,7 @@ public class SlideAssembler
 
     }
 
-    public SlideAssembler Apply(params IPrestationOperation[] operations) // applys changes and get the pdatet Prestation
+    public SlideAssembler Apply(params IPresentationOperation[] operations) // applys changes and get the pdatet Prestation
     {
         foreach (var operation in operations)
         {
