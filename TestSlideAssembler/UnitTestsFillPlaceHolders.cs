@@ -1,11 +1,5 @@
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Vml;
-using DocumentFormat.OpenXml.Vml.Presentation;
-using HarfBuzzSharp;
 using System.Data;
 using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace TestSlideAssembler
 {
@@ -64,7 +58,7 @@ namespace TestSlideAssembler
             var operation = new FillPlaceholders(data, true);
             var result = operation.ReplacePlaceholders("Hello my name is {{name}}, i live in {{address}} and i earn {{salary:N2}}", data);
 
-            Assert.AreEqual("Hello my name is Max Mustermann, i live in {{address}} and i earn 521,23",result);
+            Assert.AreEqual("Hello my name is Max Mustermann, i live in {{address}} and i earn 521,23", result);
         }
 
         [TestMethod]
@@ -79,7 +73,7 @@ namespace TestSlideAssembler
                 age = 18,
                 salary = 718
             };
-                
+
             var operation = new FillPlaceholders(data);
             var result = operation.ReplacePlaceholders(placeholders, data);
 
@@ -99,7 +93,7 @@ namespace TestSlideAssembler
 
             var operation = new FillPlaceholders(data, ignoreMissingData);
 
-            if(!ignoreMissingData)
+            if (!ignoreMissingData)
             {
                 Assert.ThrowsException<InvalidDataException>(() => operation.GetDataValue(data, placeholder));
             }
