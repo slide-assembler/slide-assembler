@@ -72,4 +72,3 @@ public class SlideAssembler
         return this;
     }
 }
-
