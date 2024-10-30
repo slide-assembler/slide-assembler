@@ -65,7 +65,7 @@ namespace TestSlideAssembler
                     Mittelwert = values.Average(),
                     Maximum = values.Max(),
                     Werte = values,
-                    Logo = new FileStream("test.jpg", FileMode.Open, FileAccess.Read)
+                    Logo = File.OpenRead("test.jpg")
                 };
 
                 //==================================================================================================================================================================
