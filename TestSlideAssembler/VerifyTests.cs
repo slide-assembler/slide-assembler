@@ -64,7 +64,8 @@ namespace TestSlideAssembler
                     Minimum = values.Min(),
                     Mittelwert = values.Average(),
                     Maximum = values.Max(),
-                    Werte = values
+                    Werte = values,
+                    Logo = new FileStream("test.jpg", FileMode.Open, FileAccess.Read)
                 };
 
                 //==================================================================================================================================================================
@@ -80,7 +81,7 @@ namespace TestSlideAssembler
                                 o.TextFrame.Text = data.Mittelwert.ToString("N2");
                                 o.Width = (Decimal)data.Mittelwert;
                                 o.Height = 10;
-                            }))
+                            })).Apply(new ReplaceImage(data))
                             .Save(stream);
 
             }
