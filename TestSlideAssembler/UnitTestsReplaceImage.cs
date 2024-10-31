@@ -44,7 +44,7 @@ namespace TestSlideAssembler
             {
                 NotTheRightLogo = new MemoryStream(new byte[] { /* byte data for an image */ })
             };
-            var operation = new ReplaceImage(imageData, ignoreMissingData: true);
+            var operation = new ReplaceImage(imageData, true);
 
             using var presentationStream = File.OpenRead("Template.pptx");
 
