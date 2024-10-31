@@ -11,7 +11,7 @@ namespace TestSlideAssembler
             SlideAssembler.SlideAssembler slideAssembler = SlideAssembler.SlideAssembler.Load(template)
                 .Apply(new ModifyObject("NotValidObject", o =>
                 {
-                    o.TextFrame.Text = "text1";
+                    o.TextBox.Text = "text1";
                     o.Width = (Decimal)82;
                     o.Height = 40;
                 }, true));
@@ -24,7 +24,7 @@ namespace TestSlideAssembler
             SlideAssembler.SlideAssembler slideAssembler = SlideAssembler.SlideAssembler.Load(template)
                 .Apply(new ModifyObject("NotValidObject", o =>
                 {
-                    o.TextFrame.Text = "text1";
+                    o.TextBox.Text = "text1";
                     o.Width = (Decimal)82;
                     o.Height = 40;
                 }, false));
@@ -61,7 +61,7 @@ namespace TestSlideAssembler
 
             slideAssembler.Apply(new ModifyObject("MittelwertRechteck", o =>
             {
-                o.TextFrame.Text = data.Mittelwert.ToString("N2");
+                o.TextBox.Text = data.Mittelwert.ToString("N2");
                 o.Width = (Decimal)data.Mittelwert;
                 o.Height = 40;
             }));
