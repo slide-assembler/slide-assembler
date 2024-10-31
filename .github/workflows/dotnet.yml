@@ -32,5 +32,5 @@ jobs:
     - name: Upload
       uses: actions/upload-artifact@v4.3.6
       with:
-        path: "D:\\a\\library-slide-assembler\\library-slide-assembler\\TestSlideAssembler\\verificationfiles\\*.png"
+        path: "D:\\a\\library-slide-assembler\\library-slide-assembler\\SlideAssembler.Tests\\verificationfiles\\*.png"
         
