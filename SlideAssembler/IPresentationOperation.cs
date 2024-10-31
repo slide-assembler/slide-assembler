@@ -2,6 +2,6 @@
 {
     public interface IPresentationOperation
     {
-        void Apply(ShapeCrawlerPresentation presentation);
+        void Apply(PresentationContext context);
     }
 }

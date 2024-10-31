@@ -13,18 +13,23 @@ public class SetWidth : IPresentationOperation
         else throw new InvalidDataException("Width of Shape has to be > 0");
 
     }
-    public void Apply(ShapeCrawlerPresentation presentation)
+    public void Apply(PresentationContext context)
     {
-        foreach (var slide in presentation.Slides)
+        var shapeFound = false;
+
+        foreach (var slide in context.Presentation.Slides)
         {
-            foreach (var shape in slide.Shapes)
+            var shape = slide.Shapes.FirstOrDefault(s => s.Name == name);
+            if (shape is not null)
             {
-                if (shape.Name.Equals(name))
-                {
-                    shape.Width = data;
-                    shape.TextBox.Text = data.ToString();
-                }
+                shape.Width = data;
+                shapeFound = true;
             }
+        }
+
+        if (!shapeFound && context.ThrowOnError)
+        {
+            throw new InvalidDataException($"Shape '{name}' not found.");
         }
     }
 }

@@ -7,30 +7,6 @@ namespace TestSlideAssembler
     [TestClass]
     public class UnitTestsFillPlaceHolders
     {
-        [TestMethod]
-        public void StandartTest()
-        {
-            var values = new[] { 0.82, 0.88, 0.64, 0.79, 0.31 };
-
-            var data = new
-            {
-                Titel = $"Messwerte vom {DateTime.Now:d}",
-                Benutzer = new
-                {
-                    Vorname = "Max",
-                    Nachname = "Mustermann"
-                },
-                Minimum = values.Min(),
-                Mittelwert = values.Average(),
-                Maximum = values.Max(),
-                Werte = values
-            };
-
-            using var template = File.OpenRead("Template.pptx");
-            using var output = new FileStream("Output.pptx", FileMode.Create, FileAccess.ReadWrite);
-            GeneratePresentation(template, data, output);
-        }
-
         [DataTestMethod]
         [DataRow("de-AT", "xyz 5,32")]
         [DataRow("en-US", "xyz 5.32")]
@@ -40,7 +16,7 @@ namespace TestSlideAssembler
 
             var data = new { MyProperty = 5.321 };
             var operation = new FillPlaceholders(data);
-            var result = operation.ReplacePlaceholders("xyz {{MyProperty:N2}}", data);
+            var result = operation.ReplacePlaceholders("xyz {{MyProperty:N2}}", throwOnError: true);
 
             Assert.AreEqual(expected, result);
         }
@@ -56,8 +32,8 @@ namespace TestSlideAssembler
                 salary = 521.23
             };
 
-            var operation = new FillPlaceholders(data, true);
-            var result = operation.ReplacePlaceholders("Hello my name is {{name}}, i live in {{address}} and i earn {{salary:N2}}", data);
+            var operation = new FillPlaceholders(data);
+            var result = operation.ReplacePlaceholders("Hello my name is {{name}}, i live in {{address}} and i earn {{salary:N2}}", throwOnError: false);
 
             Assert.AreEqual("Hello my name is Max Mustermann, i live in {{address}} and i earn 521,23", result);
         }
@@ -76,7 +52,7 @@ namespace TestSlideAssembler
             };
 
             var operation = new FillPlaceholders(data);
-            var result = operation.ReplacePlaceholders(placeholders, data);
+            var result = operation.ReplacePlaceholders(placeholders, throwOnError: false);
 
             Assert.AreEqual(expected, result);
         }
@@ -84,7 +60,7 @@ namespace TestSlideAssembler
         [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
-        public void IgnoreMissingData_GetDataValue(bool ignoreMissingData)
+        public void IgnoreMissingData_GetDataValue(bool throwOnError)
         {
             string placeholder = "{{name}}, {{age}}";
             var data = new
@@ -92,15 +68,15 @@ namespace TestSlideAssembler
                 name = "Max Mustermann",
             };
 
-            var operation = new FillPlaceholders(data, ignoreMissingData);
+            var operation = new FillPlaceholders(data);
 
-            if (!ignoreMissingData)
+            if (throwOnError)
             {
-                Assert.ThrowsException<InvalidDataException>(() => operation.GetDataValue(data, placeholder));
+                Assert.ThrowsException<InvalidDataException>(() => operation.GetDataValue(placeholder, throwOnError));
             }
             else
             {
-                Assert.AreEqual(null, operation.GetDataValue(data, placeholder));
+                Assert.AreEqual(null, operation.GetDataValue(placeholder, throwOnError));
             }
         }
 
@@ -124,8 +100,8 @@ namespace TestSlideAssembler
 
         private void GeneratePresentation(FileStream template, dynamic data, FileStream output)
         {
-            Presentation.Load(template)
-                        .Apply(new FillPlaceholders(data, false))
+            Presentation.Load(template, throwOnError: true)
+                        .Apply(new FillPlaceholders(data))
                         .Save(output);
         }
     }

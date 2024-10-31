@@ -2,22 +2,22 @@
 
 public class Presentation
 {
-    private readonly ShapeCrawlerPresentation presentation;
+    private readonly PresentationContext context;
 
-    private Presentation(ShapeCrawlerPresentation presentation)
+    private Presentation(PresentationContext context)
     {
-        this.presentation = presentation;
+        this.context = context;
     }
 
-    public static Presentation Load(Stream stream) // load Presentation from stream
+    public static Presentation Load(Stream stream, bool throwOnError = true)
     {
-        if (stream == null || !stream.CanRead)
-            throw new ArgumentException("Stream is null or not readable.", nameof(stream));
-
         if (!IsPowerPointStream(stream))
             throw new FileLoadException("The File given is not a Powerpoint Presentation!");
 
-        return new Presentation(new ShapeCrawlerPresentation(stream));
+        return new Presentation(
+            new PresentationContext(
+                new ShapeCrawlerPresentation(stream),
+                throwOnError));
 
     }
 
@@ -53,18 +53,18 @@ public class Presentation
         return false;
     }
 
-    public void Save(Stream stream) // save Presentation in stream 
+    public void Save(Stream stream)
     {
         if (stream == null) throw new ArgumentNullException("Stream can´t be null.");
 
-        presentation.SaveAs(stream);
+        this.context.Presentation.SaveAs(stream);
     }
 
-    public Presentation Apply(params IPresentationOperation[] operations) // applies changes and get the updated Presentation
+    public Presentation Apply(params IPresentationOperation[] operations)
     {
         foreach (var operation in operations)
         {
-            operation.Apply(this.presentation);
+            operation.Apply(this.context);
         }
 
         return this;

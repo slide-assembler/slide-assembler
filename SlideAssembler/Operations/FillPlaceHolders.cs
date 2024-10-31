@@ -1,39 +1,29 @@
 ﻿using SlideAssembler;
 using System.Text.RegularExpressions;
 
-public partial class FillPlaceholders : IPresentationOperation
+public partial class FillPlaceholders(object data) : IPresentationOperation
 {
-    private readonly object data;
-    private bool ignoreMissingData;
-
-    // Regular expression to find placeholders {{Name:Format}}
-    [GeneratedRegex(@"{{(.*?)(:(.*?))?}}", RegexOptions.None)]
+    // Regular expression to find placeholders {{Name[:Format]}}
+    [GeneratedRegex(@"{{(.*?)(:(.*?))?}}", RegexOptions.None, 1000)]
     private static partial Regex PlaceholderRegex();
 
-    public FillPlaceholders(object data, bool ignoreMissingData = false)
+    public void Apply(PresentationContext context)
     {
-        this.data = data;
-        this.ignoreMissingData = ignoreMissingData;
-    }
-
-    public void Apply(ShapeCrawlerPresentation presentation)
-    {
-        foreach (var slide in presentation.Slides)
+        foreach (var slide in context.Presentation.Slides)
         {
             foreach (var textFrame in slide.TextFrames())
             {
                 var text = textFrame.Text;
-                var newText = ReplacePlaceholders(text, data);
+                var newText = ReplacePlaceholders(text, context.ThrowOnError);
                 if (newText != textFrame.Text)
                 {
                     textFrame.Text = newText;
                 }
-
             }
         }
     }
 
-    public string ReplacePlaceholders(string text, object data)
+    public string ReplacePlaceholders(string text, bool throwOnError)
     {
         var matches = PlaceholderRegex().Matches(text);
 
@@ -43,7 +33,7 @@ public partial class FillPlaceholders : IPresentationOperation
             var format = match.Groups[3].Value;
 
             // Get the value from the data object
-            var value = GetDataValue(data, placeholder);
+            var value = GetDataValue(placeholder, throwOnError);
 
             if (value != null)
             {
@@ -67,7 +57,7 @@ public partial class FillPlaceholders : IPresentationOperation
         return text;
     }
 
-    public object? GetDataValue(object data, string placeholder)
+    public object? GetDataValue(string placeholder, bool throwOnError)
     {
 
         var properties = placeholder.Split('.');
@@ -78,13 +68,13 @@ public partial class FillPlaceholders : IPresentationOperation
         {
             if (currentObject == null)
             {
-                if (ignoreMissingData) return null;
+                if (!throwOnError) return null;
                 throw new InvalidDataException("Data cant be null or empty!");
             }
 
             var propertyInfo = currentObject.GetType().GetProperty(property.Trim());
 
-            if (propertyInfo == null && ignoreMissingData) return null;
+            if (propertyInfo == null && !throwOnError) return null;
             if (propertyInfo == null) throw new InvalidDataException("Missing Data!");
 
             currentObject = propertyInfo.GetValue(currentObject);

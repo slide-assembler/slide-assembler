@@ -1,38 +1,25 @@
 ﻿using ShapeCrawler;
 using SlideAssembler;
 
-public class ModifyObject : IPresentationOperation
+public class ModifyObject(string name, Action<IShape> action) : IPresentationOperation
 {
-    private readonly string name;
-    private readonly Action<IShape> action;
-    private readonly bool ignoreMissingData;
-
-    public ModifyObject(string name, Action<IShape> action, bool ignoreMissingData = false)
-    {
-        this.name = name;
-        this.action = action;
-        this.ignoreMissingData = ignoreMissingData;
-    }
-
-    public void Apply(ShapeCrawlerPresentation presentation)
+    public void Apply(PresentationContext context)
     {
         bool shapeFound = false;
 
-        foreach (var slide in presentation.Slides)
+        foreach (var slide in context.Presentation.Slides)
         {
-            foreach (var shape in slide.Shapes)
+            var shape = slide.Shapes.FirstOrDefault(s => s.Name == name);
+            if (shape is not null)
             {
-                if (shape.Name.Equals(name))
-                {
-                    action(shape);
-                    shapeFound = true;
-                }
+                action(shape);
+                shapeFound = true;
             }
         }
 
-        if (!shapeFound && !ignoreMissingData)
+        if (!shapeFound && context.ThrowOnError)
         {
-            throw new InvalidDataException("Object not found!");
+            throw new InvalidDataException("Object '{name}' not found");
         }
     }
 }

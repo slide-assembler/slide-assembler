@@ -78,6 +78,7 @@ namespace TestSlideAssembler
                             .Apply(new FillChart("LineChart", seriesList))
                             .Apply(new ModifyObject("MittelwertRechteck", o =>
                             {
+                                // TODO: Create extra object for modify object test
                                 o.TextBox.Text = data.Mittelwert.ToString("N2");
                                 o.Width = (Decimal)data.Mittelwert;
                                 o.Height = 10;
