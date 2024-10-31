@@ -13,7 +13,8 @@
     <None Remove="Not_a_PowerPoint.txt" />
     <None Remove="Template.pptx" />
     <None Remove="Template_missing_Placeholders.pptx" />
-    <None Remove="verificationfiles\Template.pptx" />
+    <None Remove="verificationfiles\Template_all_features.pptx" />
+    <None Remove="verificationfiles\Template_different_formating.pptx" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,18 +37,21 @@
     <EmbeddedResource Include="Not_a_PowerPoint.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Template.pptx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Template_missing_Placeholders.pptx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <Content Include="Template.pptx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Template_missing_Placeholders.pptx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="verificationfiles\Template.pptx">
+    <Content Include="verificationfiles\Template_all_features.pptx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    </Content>
+    <Content Include="verificationfiles\Template_different_formating.pptx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

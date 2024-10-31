@@ -6,19 +6,20 @@ namespace SlideAssembler.Tests;
 public class SetWidthUnitTests
 {
     [TestMethod]
-    [ExpectedException(typeof(InvalidDataException))]
+    [ExpectedException(typeof(ArgumentOutOfRangeException))]
     [DataRow(-1)]
     [DataRow(-0.1)]
-    public void DecimalNotValidTest(double decimalnumber)
+    public void WidthNotValidTest(double width)
     {
-        new SetWidth("shape", (Decimal)decimalnumber);
+        new SetWidth("shape", (decimal)width);
     }
 
     [TestMethod]
     [DataRow(0)]
+    [DataRow(1.5)]
     [DataRow(123)]
-    public void DecimalValidTest(double decimalnumber)
+    public void WidthValidTest(double width)
     {
-        new SetWidth("shape", (Decimal)decimalnumber);
+        new SetWidth("shape", (decimal)width);
     }
 }

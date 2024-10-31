@@ -4,15 +4,19 @@
 public class SetWidth : IPresentationOperation
 {
     private readonly string name;
-    private decimal data;
+    private readonly decimal width;
 
-    public SetWidth(string name, decimal data)
+    public SetWidth(string name, decimal width)
     {
-        this.name = name;
-        if (data >= 0) this.data = data;
-        else throw new InvalidDataException("Width of Shape has to be > 0");
+        if (width < 0.0m)
+        {
+            throw new ArgumentOutOfRangeException("Width has to be >= 0", nameof(width));
+        }
 
+        this.name = name;
+        this.width = width;
     }
+
     public void Apply(PresentationContext context)
     {
         var shapeFound = false;
@@ -22,7 +26,7 @@ public class SetWidth : IPresentationOperation
             var shape = slide.Shapes.FirstOrDefault(s => s.Name == name);
             if (shape is not null)
             {
-                shape.Width = data;
+                shape.Width = width;
                 shapeFound = true;
             }
         }
