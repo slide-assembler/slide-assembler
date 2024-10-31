@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using SlideAssembler;
 using Syncfusion.PresentationRenderer;
 
 namespace TestSlideAssembler
@@ -69,7 +70,7 @@ namespace TestSlideAssembler
 
                 //==================================================================================================================================================================
                 Series[] seriesList = [new Series("Datenreihe 1", values), new Series("Datenreihe 2", values.Select(v => v * 2).ToArray())];
-                SlideAssembler.SlideAssembler.Load(template)
+                Presentation.Load(template)
                             .Apply(new FillPlaceholders(data)).Apply(new FillChart("MesswertDiagramm", new Series("Werte", values)))
                             .Apply(new SetWidth("MittelwertRechteck", (Decimal)data.Mittelwert))
                             .Apply(new SetWidth("MaximumRechteck", (Decimal)data.Maximum))

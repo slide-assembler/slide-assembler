@@ -1,5 +1,4 @@
-﻿using ShapeCrawler;
-using SlideAssembler;
+﻿using SlideAssembler;
 using System.Text.RegularExpressions;
 
 public partial class FillPlaceholders : IPresentationOperation
@@ -17,7 +16,7 @@ public partial class FillPlaceholders : IPresentationOperation
         this.ignoreMissingData = ignoreMissingData;
     }
 
-    public void Apply(Presentation presentation)
+    public void Apply(ShapeCrawlerPresentation presentation)
     {
         foreach (var slide in presentation.Slides)
         {

@@ -1,5 +1,6 @@
 using System.Data;
 using System.Globalization;
+using SlideAssembler;
 
 namespace TestSlideAssembler
 {
@@ -123,7 +124,7 @@ namespace TestSlideAssembler
 
         private void GeneratePresentation(FileStream template, dynamic data, FileStream output)
         {
-            SlideAssembler.SlideAssembler.Load(template)
+            Presentation.Load(template)
                         .Apply(new FillPlaceholders(data, false))
                         .Save(output);
         }

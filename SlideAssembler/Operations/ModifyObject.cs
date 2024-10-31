@@ -14,7 +14,7 @@ public class ModifyObject : IPresentationOperation
         this.ignoreMissingData = ignoreMissingData;
     }
 
-    public void Apply(Presentation presentation)
+    public void Apply(ShapeCrawlerPresentation presentation)
     {
         bool shapeFound = false;
 

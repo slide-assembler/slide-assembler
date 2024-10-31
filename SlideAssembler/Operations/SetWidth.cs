@@ -1,5 +1,4 @@
-﻿using ShapeCrawler;
-using SlideAssembler;
+﻿using SlideAssembler;
 
 
 public class SetWidth : IPresentationOperation
@@ -14,7 +13,7 @@ public class SetWidth : IPresentationOperation
         else throw new InvalidDataException("Width of Shape has to be > 0");
 
     }
-    public void Apply(Presentation presentation)
+    public void Apply(ShapeCrawlerPresentation presentation)
     {
         foreach (var slide in presentation.Slides)
         {

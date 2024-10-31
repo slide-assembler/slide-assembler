@@ -21,7 +21,7 @@ public partial class FillChart : IPresentationOperation
         this.ignoreMissingData = ignoreMissingData;
     }
 
-    public void Apply(Presentation presentation)
+    public void Apply(ShapeCrawlerPresentation presentation)
     {
         bool chartFound = false;
 

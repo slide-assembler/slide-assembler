@@ -1,6 +1,4 @@
-﻿using DocumentFormat.OpenXml.ExtendedProperties;
-using DocumentFormat.OpenXml.Presentation;
-using SlideAssembler;
+﻿using SlideAssembler;
 
 namespace TestSlideAssembler
 {
@@ -14,9 +12,9 @@ namespace TestSlideAssembler
         public void IgnoreMissingDataIsTrue_ShouldNotThrowException()
         {
             var seriesWithMissingData = new Series("series1", []); // No data
-            var fillChart = new FillChart("TestChart", new[] { seriesWithMissingData }, ignoreMissingData: true);    
-            
-            SlideAssembler.SlideAssembler.Load(template)
+            var fillChart = new FillChart("TestChart", new[] { seriesWithMissingData }, ignoreMissingData: true);
+
+            Presentation.Load(template)
                         .Apply(fillChart);
         }
 
@@ -26,19 +24,19 @@ namespace TestSlideAssembler
         {
             var seriesWithMissingData = new Series("series1", []); // No data
             var fillChart = new FillChart("TestChart", new[] { seriesWithMissingData }); //ignoreMissingData is False if its untouched
-            
-            SlideAssembler.SlideAssembler.Load(template)
+
+            Presentation.Load(template)
                         .Apply(fillChart);
         }
 
         [TestMethod]
-        [ExpectedException (typeof(NullReferenceException))]
+        [ExpectedException(typeof(NullReferenceException))]
         public void nullReferencesTest_singleSeries_IgnoreMissingDataIsFalse()
         {
-            Series nullSeries = null; 
+            Series nullSeries = null;
             var fillChart = new FillChart("MesswertDiagramm", nullSeries, false);
 
-            SlideAssembler.SlideAssembler.Load(template)
+            Presentation.Load(template)
                         .Apply(fillChart);
         }
 
@@ -48,7 +46,7 @@ namespace TestSlideAssembler
             Series nullSeries = null;
             var fillChart = new FillChart("MesswertDiagramm", nullSeries, true);
 
-            SlideAssembler.SlideAssembler.Load(template)
+            Presentation.Load(template)
                         .Apply(fillChart);
         }
 
@@ -57,10 +55,10 @@ namespace TestSlideAssembler
         [ExpectedException(typeof(NullReferenceException))]
         public void nullReferencesTest_MultipleSeries_IgnoreMissingDataIsFalse()
         {
-            Series[] seriesList = [new Series("Datenreihe 1", [0.83, 0.1, 0.72, 0.15]), null ,new Series("Datenreihe 2", [0.88, 0.8, 0.62, 0.75])];
+            Series[] seriesList = [new Series("Datenreihe 1", [0.83, 0.1, 0.72, 0.15]), null, new Series("Datenreihe 2", [0.88, 0.8, 0.62, 0.75])];
             var fillChart = new FillChart("LineChart", seriesList, false);
 
-            SlideAssembler.SlideAssembler.Load(templateForMultipleSeries)
+            Presentation.Load(templateForMultipleSeries)
                         .Apply(fillChart);
         }
 
@@ -70,7 +68,7 @@ namespace TestSlideAssembler
             Series[] seriesList = [new Series("Datenreihe 1", [0.83, 0.1, 0.72, 0.15]), null, new Series("Datenreihe 2", [0.88, 0.8, 0.62, 0.75])];
             var fillChart = new FillChart("LineChart", seriesList, true);
 
-            SlideAssembler.SlideAssembler.Load(templateForMultipleSeries)
+            Presentation.Load(templateForMultipleSeries)
                         .Apply(fillChart);
         }
 
@@ -81,7 +79,7 @@ namespace TestSlideAssembler
             Series[] seriesList = [new Series(null, [0.83, 0.1, 0.72, 0.15]), null, new Series("Datenreihe 2", [0.88, 0.8, 0.62, 0.75])];
             var fillChart = new FillChart("LineChart", seriesList, false);
 
-            SlideAssembler.SlideAssembler.Load(templateForMultipleSeries)
+            Presentation.Load(templateForMultipleSeries)
                         .Apply(fillChart);
         }
 
@@ -92,7 +90,7 @@ namespace TestSlideAssembler
             Series[] seriesList = [new Series("Series 1", [0.83, 0.1, 0.72, 0.15]), null, new Series("Datenreihe 2", [0.88, 0.8, 0.62, 0.75])];
             var fillChart = new FillChart(null, seriesList, false);
 
-            SlideAssembler.SlideAssembler.Load(templateForMultipleSeries)
+            Presentation.Load(templateForMultipleSeries)
                         .Apply(fillChart);
         }
 
@@ -122,7 +120,7 @@ namespace TestSlideAssembler
         }
         private void GeneratePresentation(FileStream template, double[] values, FileStream output)
         {
-            SlideAssembler.SlideAssembler.Load(template)
+            Presentation.Load(template)
                         .Apply(new FillChart("MesswertDiagramm", new Series("Messwerte", values)))
                         .Save(output);
         }

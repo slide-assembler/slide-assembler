@@ -1,17 +1,15 @@
-﻿using ShapeCrawler;
+﻿namespace SlideAssembler;
 
-namespace SlideAssembler;
-
-public class SlideAssembler
+public class Presentation
 {
-    private readonly Presentation presentation;
+    private readonly ShapeCrawlerPresentation presentation;
 
-    private SlideAssembler(Presentation presentation)
+    private Presentation(ShapeCrawlerPresentation presentation)
     {
         this.presentation = presentation;
     }
 
-    public static SlideAssembler Load(Stream stream) // load Presentation from stream
+    public static Presentation Load(Stream stream) // load Presentation from stream
     {
         if (stream == null || !stream.CanRead)
             throw new ArgumentException("Stream is null or not readable.", nameof(stream));
@@ -19,7 +17,7 @@ public class SlideAssembler
         if (!IsPowerPointStream(stream))
             throw new FileLoadException("The File given is not a Powerpoint Presentation!");
 
-        return new SlideAssembler(new Presentation(stream));
+        return new Presentation(new ShapeCrawlerPresentation(stream));
 
     }
 
@@ -58,17 +56,17 @@ public class SlideAssembler
     public void Save(Stream stream) // save Presentation in stream 
     {
         if (stream == null) throw new ArgumentNullException("Stream can´t be null.");
-        
+
         presentation.SaveAs(stream);
     }
 
-    public SlideAssembler Apply(params IPresentationOperation[] operations) // applies changes and get the updated Presentation
+    public Presentation Apply(params IPresentationOperation[] operations) // applies changes and get the updated Presentation
     {
         foreach (var operation in operations)
         {
             operation.Apply(this.presentation);
         }
-        
+
         return this;
     }
 }

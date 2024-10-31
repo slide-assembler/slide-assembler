@@ -1,3 +1,5 @@
+using SlideAssembler;
+
 namespace TestSlideAssembler
 {
     [TestClass]
@@ -8,7 +10,7 @@ namespace TestSlideAssembler
         [TestMethod]
         public void IgnoreMissingData_isTrue_SHouldNotThrowException()
         {
-            SlideAssembler.SlideAssembler slideAssembler = SlideAssembler.SlideAssembler.Load(template)
+            Presentation.Load(template)
                 .Apply(new ModifyObject("NotValidObject", o =>
                 {
                     o.TextBox.Text = "text1";
@@ -21,7 +23,7 @@ namespace TestSlideAssembler
         [ExpectedException(typeof(InvalidDataException))]
         public void IgnoreMissingData_isfalse_ShouldThrowException()
         {
-            SlideAssembler.SlideAssembler slideAssembler = SlideAssembler.SlideAssembler.Load(template)
+            Presentation.Load(template)
                 .Apply(new ModifyObject("NotValidObject", o =>
                 {
                     o.TextBox.Text = "text1";
@@ -52,21 +54,21 @@ namespace TestSlideAssembler
 
             using var output = new FileStream("Output.pptx", FileMode.Create, FileAccess.ReadWrite);
 
-            SlideAssembler.SlideAssembler slideAssembler = SlideAssembler.SlideAssembler.Load(template);
+            var presentation = Presentation.Load(template);
 
-            slideAssembler = slideAssembler.Apply(new FillPlaceholders(data));
-            slideAssembler
+            presentation = presentation.Apply(new FillPlaceholders(data));
+            presentation
                 .Apply(new SetWidth("MaximumRechteck", (Decimal)data.Maximum))
                 .Apply(new SetWidth("MaximumRechteck", (Decimal)data.Minimum));
 
-            slideAssembler.Apply(new ModifyObject("MittelwertRechteck", o =>
+            presentation.Apply(new ModifyObject("MittelwertRechteck", o =>
             {
                 o.TextBox.Text = data.Mittelwert.ToString("N2");
                 o.Width = (Decimal)data.Mittelwert;
                 o.Height = 40;
             }));
 
-            slideAssembler.Save(output);
+            presentation.Save(output);
         }
     }
 }
