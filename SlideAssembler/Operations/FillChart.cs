@@ -1,30 +1,10 @@
 ﻿using ShapeCrawler;
 using SlideAssembler;
+using SlideAssembler.Operations;
 
-public partial class FillChart(string name, params Series[] seriesList) : IPresentationOperation
+public partial class FillChart(string name, params Series[] seriesList) : NamedShapeOperation<IChart>(name)
 {
-    public void Apply(PresentationContext context)
-    {
-        bool chartFound = false;
-
-        foreach (var slide in context.Presentation.Slides)
-        {
-            var chart = slide.Shapes.OfType<IChart>().FirstOrDefault(c => c.Name == name);
-
-            if (chart is not null)
-            {
-                chartFound = true;
-                CompleteChart(context, chart);
-            }
-        }
-
-        if (!chartFound && context.ThrowOnError)
-        {
-            throw new InvalidDataException($"Chart '{name}' not found.");
-        }
-    }
-
-    public void CompleteChart(PresentationContext context, IChart chart)
+    protected override void Apply(PresentationContext context, IChart chart)
     {
         foreach (var series in seriesList)
         {
@@ -34,7 +14,7 @@ public partial class FillChart(string name, params Series[] seriesList) : IPrese
             {
                 if (context.ThrowOnError)
                 {
-                    throw new InvalidDataException($"Series '{series.Name} in Chart '{name}' not found.");
+                    throw new InvalidDataException($"Series '{series.Name} in chart '{name}' not found.");
                 }
                 else
                 {

@@ -162,23 +162,36 @@ public partial class FillPlaceholders(object data) : IPresentationOperation
 
     public object? GetDataValue(string placeholder, bool throwOnError)
     {
-
         var properties = placeholder.Split('.');
         object? currentObject = data;
-
 
         foreach (var property in properties)
         {
             if (currentObject == null)
             {
-                if (!throwOnError) return null;
-                throw new InvalidDataException("Data cant be null or empty!");
+                if (!throwOnError)
+                {
+                    return null;
+                }
+                else
+                {
+                    throw new InvalidDataException($"Missing data for placeholder: '{placeholder}'");
+                }
             }
 
             var propertyInfo = currentObject.GetType().GetProperty(property.Trim());
 
-            if (propertyInfo == null && !throwOnError) return null;
-            if (propertyInfo == null) throw new InvalidDataException("Missing Data!");
+            if (propertyInfo == null)
+            {
+                if (!throwOnError)
+                {
+                    return null;
+                }
+                else
+                {
+                    throw new InvalidDataException($"Missing data for placeholder: '{placeholder}'");
+                }
+            }
 
             currentObject = propertyInfo.GetValue(currentObject);
         }

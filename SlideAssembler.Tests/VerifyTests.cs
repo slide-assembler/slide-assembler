@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Runtime.CompilerServices;
+using ShapeCrawler;
 using Syncfusion.PresentationRenderer;
 
 namespace SlideAssembler.Tests;
@@ -86,7 +87,7 @@ public class VerifyTests : VerifyBase
                 .Apply(new SetWidth("MaximumRechteck", (decimal)data.Maximum))
                 .Apply(new SetWidth("MinimumRechteck", (decimal)data.Minimum))
                 .Apply(new FillChart("LineChart", seriesList))
-                .Apply(new ModifyObject("MittelwertRechteck", o =>
+                .Apply(new ModifyObject<IShape>("MittelwertRechteck", o =>
                 {
                     // TODO: Create extra object for modify object test
                     o.TextBox.Text = data.Mittelwert.ToString("N2");
