@@ -31,7 +31,7 @@ jobs:
       run: dotnet build --no-restore -c Release
     
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build -c Release --verbosity normal
 
     - name: Upload verification files
       if: success() || failure()
