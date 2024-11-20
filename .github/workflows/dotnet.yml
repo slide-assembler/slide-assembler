@@ -37,10 +37,12 @@ jobs:
       if: success() || failure()
       uses: actions/upload-artifact@v4.3.6
       with:
+        name: verification-files
         path: "D:\\a\\slide-assembler\\slide-assembler\\SlideAssembler.Tests\\verificationfiles\\*.png"
 
     - name: Upload nuget package
       uses: actions/upload-artifact@v4.3.6
       with:
+        name: nuget-package
         path: "D:\\a\\slide-assembler\\slide-assembler\\SlideAssembler\\bin\\Release\\*.nupkg"
         
