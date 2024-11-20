@@ -3,7 +3,7 @@
 
 name: Build and test
 env:
-  SyncfusionLicenseKey: ${{ secrets.SyncfusionLicenseKey }}
+  SyncfusionLicenseKey: ${{ secrets.SYNCFUSIONLICENSEKEY }}
 
 on:
   push:
