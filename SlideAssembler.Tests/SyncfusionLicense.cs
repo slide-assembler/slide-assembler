@@ -6,7 +6,7 @@
         [AssemblyInitialize]
         public static void Register(TestContext _)
         {
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(Environment.GetEnvironmentVariable("SyncfusionLicenseKey");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(Environment.GetEnvironmentVariable("SyncfusionLicenseKey"));
         }
     }
 }
