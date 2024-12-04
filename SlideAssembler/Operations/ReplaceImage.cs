@@ -12,9 +12,9 @@ public partial class ReplaceImage : IPresentationOperation
         this.data = data;
         this.ignoreMissingData = ignoreMissingData;
     }
-    public void Apply(Presentation presentation)
+    public void Apply(PresentationContext context)
     {
-        foreach (var slide in presentation.Slides)
+        foreach (var slide in context.Presentation.Slides)
         {
             foreach (var shape in slide.Shapes)
             {
