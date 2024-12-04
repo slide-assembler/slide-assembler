@@ -8,7 +8,9 @@ namespace TestSlideAssembler
     [TestClass]
     public class UnitTestsReplaceImage
     {
-        [TestMethod]
+        private ShapeCrawler.Presentation template = new ShapeCrawler.Presentation(File.OpenRead("Template.pptx"));
+
+    [TestMethod]
         public void Standarttest()
         {
             var imageData = new
@@ -19,7 +21,7 @@ namespace TestSlideAssembler
 
             using var presentationStream = File.OpenRead("Template.pptx");
 
-            SlideAssembler.SlideAssembler.Load(presentationStream).Apply(new ReplaceImage(imageData)).Save(new MemoryStream());
+            SlideAssembler.Presentation.Load(presentationStream).Apply(new ReplaceImage(imageData)).Save(new MemoryStream());
         }
 
         [TestMethod]
@@ -32,9 +34,9 @@ namespace TestSlideAssembler
             };
             var operation = new ReplaceImage(imageData);
 
-            using var presentationStream = File.OpenRead("Template.pptx");
+            
 
-            operation.Apply(new Presentation(presentationStream));
+            operation.Apply(new PresentationContext(template));
         }
 
         [TestMethod]
@@ -48,7 +50,7 @@ namespace TestSlideAssembler
 
             using var presentationStream = File.OpenRead("Template.pptx");
 
-            operation.Apply(new Presentation(presentationStream));
+            operation.Apply(new PresentationContext(template));
             Assert.IsTrue(true);
         }
 
@@ -64,7 +66,7 @@ namespace TestSlideAssembler
 
             using var presentationStream = File.OpenRead("Template.pptx");
 
-            operation.Apply(new Presentation(presentationStream));
+            operation.Apply(new PresentationContext(template));
         }
     }
 }
