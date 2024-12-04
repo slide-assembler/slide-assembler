@@ -1,3 +1,5 @@
+using ShapeCrawler;
+
 namespace SlideAssembler.Tests;
 
 [TestClass]
@@ -9,7 +11,7 @@ public class ModifyObjectUnitTests
     public void ThrowOnError_IsFalse_ShouldNotThrowException()
     {
         Presentation.Load(template, false)
-            .Apply(new ModifyObject("NotValidObject", o =>
+            .Apply(new ModifyObject<IShape>("NotValidObject", o =>
             {
                 o.TextBox.Text = "text1";
                 o.Width = (Decimal)82;
@@ -22,7 +24,7 @@ public class ModifyObjectUnitTests
     public void ThrowOnError_IsTrue_ShouldThrowException()
     {
         Presentation.Load(template, true)
-            .Apply(new ModifyObject("NotValidObject", o =>
+            .Apply(new ModifyObject<IShape>("NotValidObject", o =>
             {
                 o.TextBox.Text = "text1";
                 o.Width = (Decimal)82;

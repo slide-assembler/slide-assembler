@@ -1,26 +1,13 @@
 ﻿using ShapeCrawler;
 using SlideAssembler;
+using SlideAssembler.Operations;
 
-public class ModifyObject(string name, Action<IShape> action) : IPresentationOperation
+public class ModifyObject<TShape>(string name, Action<TShape> action) : NamedShapeOperation<TShape>(name)
+    where TShape : IShape
 {
-    public void Apply(PresentationContext context)
+    protected override void Apply(PresentationContext context, TShape shape)
     {
-        bool shapeFound = false;
-
-        foreach (var slide in context.Presentation.Slides)
-        {
-            var shape = slide.Shapes.FirstOrDefault(s => s.Name == name);
-            if (shape is not null)
-            {
-                action(shape);
-                shapeFound = true;
-            }
-        }
-
-        if (!shapeFound && context.ThrowOnError)
-        {
-            throw new InvalidDataException("Object '{name}' not found");
-        }
+        action(shape);
     }
 }
 
