@@ -7,10 +7,9 @@ public partial class ReplaceImage : IPresentationOperation
     private readonly object data;
     private bool ignoreMissingData;
 
-    public ReplaceImage(object data, bool ignoreMissingData = false)
+    public ReplaceImage(object data)
     {
         this.data = data;
-        this.ignoreMissingData = ignoreMissingData;
     }
     public void Apply(PresentationContext context)
     {
@@ -26,7 +25,7 @@ public partial class ReplaceImage : IPresentationOperation
         }
     }
 
-    private void UpdateImage(IPicture image)
+    private void UpdateImage(IPicture image, bool throwOnError = false)
     {
         var property = data.GetType().GetProperty(image.Name);
 
@@ -35,7 +34,7 @@ public partial class ReplaceImage : IPresentationOperation
             Stream stream = (Stream)property.GetValue(data);
             image.Image.Update(stream);
         }
-        else if (!ignoreMissingData)
+        else if (!throwOnError)
         {
             throw new InvalidDataException("Property is null or not a stream");
         }

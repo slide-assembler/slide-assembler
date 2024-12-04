@@ -46,11 +46,9 @@ namespace TestSlideAssembler
             {
                 NotTheRightLogo = new MemoryStream(new byte[] { /* byte data for an image */ })
             };
-            var operation = new ReplaceImage(imageData, true);
+            var operation = new ReplaceImage(imageData);
 
-            using var presentationStream = File.OpenRead("Template.pptx");
-
-            operation.Apply(new PresentationContext(template));
+            operation.Apply(new PresentationContext(template, true));
             Assert.IsTrue(true);
         }
 
@@ -63,8 +61,6 @@ namespace TestSlideAssembler
                 Logo = "This is not a stream"
             };
             var operation = new ReplaceImage(imageData);
-
-            using var presentationStream = File.OpenRead("Template.pptx");
 
             operation.Apply(new PresentationContext(template));
         }
