@@ -1,31 +1,39 @@
-﻿using ShapeCrawler;
-using SlideAssembler;
+﻿using SlideAssembler;
 
 
 public class SetWidth : IPresentationOperation
 {
     private readonly string name;
-    private decimal data;
+    private readonly decimal width;
 
-    public SetWidth(string name, decimal data)
+    public SetWidth(string name, decimal width)
     {
-        this.name = name;
-        if (data >= 0) this.data = data;
-        else throw new InvalidDataException("Width of Shape has to be > 0");
-        
-    }
-    public void Apply(Presentation presentation)
-    {
-        foreach (var slide in presentation.Slides)
+        if (width < 0.0m)
         {
-            foreach (var shape in slide.Shapes)
+            throw new ArgumentOutOfRangeException("Width has to be >= 0", nameof(width));
+        }
+
+        this.name = name;
+        this.width = width;
+    }
+
+    public void Apply(PresentationContext context)
+    {
+        var shapeFound = false;
+
+        foreach (var slide in context.Presentation.Slides)
+        {
+            var shape = slide.Shapes.FirstOrDefault(s => s.Name == name);
+            if (shape is not null)
             {
-                if (shape.Name.Equals(name))
-                {
-                    shape.Width = data;
-                    shape.TextFrame.Text = data.ToString();
-                }
+                shape.Width = width;
+                shapeFound = true;
             }
+        }
+
+        if (!shapeFound && context.ThrowOnError)
+        {
+            throw new InvalidDataException($"Shape '{name}' not found.");
         }
     }
 }

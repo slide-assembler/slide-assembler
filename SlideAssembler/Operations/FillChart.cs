@@ -1,84 +1,33 @@
 ﻿using ShapeCrawler;
 using SlideAssembler;
+using SlideAssembler.Operations;
 
-public partial class FillChart : IPresentationOperation
+public partial class FillChart(string name, params Series[] seriesList) : NamedShapeOperation<IChart>(name)
 {
-    private string chartTitle;
-    private Series[] seriesList;
-    private bool ignoreMissingData;
-
-    public FillChart(string chartTitle, Series[] seriesList, bool ignoreMissingData = false)
+    protected override void Apply(PresentationContext context, IChart chart)
     {
-        this.chartTitle = chartTitle;
-        this.seriesList = seriesList;
-        this.ignoreMissingData = ignoreMissingData;
-    }
-
-    public FillChart(string chartTitle, Series singleSeries, bool ignoreMissingData = false)
-    {
-        this.chartTitle = chartTitle;
-        this.seriesList = new Series[] { singleSeries };
-        this.ignoreMissingData = ignoreMissingData;
-    }
-
-    public void Apply(Presentation presentation)
-    {
-        bool chartFound = false;
-
-        foreach (var slide in presentation.Slides)
+        foreach (var series in seriesList)
         {
-            foreach (var shape in slide.Shapes)
+            var chartSeries = chart.SeriesList.FirstOrDefault(s => s.Name == series.Name);
+
+            if (chartSeries is null)
             {
-                if (shape is IChart chart && shape.Name == chartTitle)
+                if (context.ThrowOnError)
                 {
-                    chartFound = true;
-                    CompleteChart(chart);
+                    throw new InvalidDataException($"Series '{series.Name} in chart '{name}' not found.");
                 }
-            }
-        }
-
-        if (!chartFound && !ignoreMissingData)
-        {
-            throw new InvalidDataException($"Chart mit dem Titel '{chartTitle}' wurde nicht gefunden.");
-        }
-    }
-
-    public void CompleteChart(IChart chart)
-    {
-        bool seriesFound = false;
-
-        for (int i = 0; i < seriesList.Length; i++)
-        {
-            if (seriesList[i] == null && !ignoreMissingData)
-            {
-                throw new NullReferenceException("Series cannot be null!");
-            }
-            else if (seriesList[i] == null)
-            {
-                i++;
-            }
-            else
-            {
-                var series = seriesList[i];
-
-                var chartSeries = chart.SeriesList.FirstOrDefault(s => s.Name == series.name);
-
-                if (chartSeries != null)
+                else
                 {
-                    seriesFound = true;
-                    for (int pointIndex = 0; pointIndex < series.values.Length; pointIndex++)
-                    {
-                        if (pointIndex < chartSeries.Points.Count)
-                        {
-                            chartSeries.Points[pointIndex].Value = (double)series.values[pointIndex];
-                        }
-                    }
+                    continue;
                 }
             }
 
-            if (!seriesFound && !ignoreMissingData)
+            for (int pointIndex = 0; pointIndex < series.Values.Length; pointIndex++)
             {
-                throw new InvalidDataException($"Serie(n) in Chart '{chartTitle}' wurden nicht gefunden.");
+                if (pointIndex < chartSeries.Points.Count)
+                {
+                    chartSeries.Points[pointIndex].Value = (double)series.Values[pointIndex];
+                }
             }
         }
     }

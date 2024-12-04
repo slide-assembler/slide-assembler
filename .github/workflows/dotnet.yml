@@ -2,6 +2,8 @@
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
 name: Build and test
+env:
+  SyncfusionLicenseKey: ${{ secrets.SYNCFUSIONLICENSEKEY }}
 
 on:
   push:
@@ -16,21 +18,31 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+    
     - name: Restore dependencies
       run: dotnet restore
+    
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore -c Release
+    
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build -c Release --verbosity normal
 
-# uncomment the following lines to debug verification tests:
-#      continue-on-error: true # set this to true 
-#    - name: Upload
-#      uses: actions/upload-artifact@v4.3.6
-#      with:
-#        path: "D:\\a\\library-slide-assembler\\library-slide-assembler\\TestSlideAssembler\\verificationfiles\\*.png"
+    - name: Upload verification files
+      if: success() || failure()
+      uses: actions/upload-artifact@v4.3.6
+      with:
+        name: verification-files
+        path: "D:\\a\\slide-assembler\\slide-assembler\\SlideAssembler.Tests\\verificationfiles\\*.png"
+
+    - name: Upload nuget package
+      uses: actions/upload-artifact@v4.3.6
+      with:
+        name: nuget-package
+        path: "D:\\a\\slide-assembler\\slide-assembler\\SlideAssembler\\bin\\Release\\*.nupkg"
         
