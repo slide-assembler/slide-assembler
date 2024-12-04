@@ -13,6 +13,7 @@
     <None Remove="Not_a_PowerPoint.txt" />
     <None Remove="Template.pptx" />
     <None Remove="Template_missing_Placeholders.pptx" />
+    <None Remove="test.jpg" />
     <None Remove="verificationfiles\Template_all_features.pptx" />
     <None Remove="verificationfiles\Template_different_formating.pptx" />
   </ItemGroup>
@@ -54,6 +55,15 @@
     <Content Include="verificationfiles\Template_different_formating.pptx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="test.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <Resource Include="verificationfiles\test.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
