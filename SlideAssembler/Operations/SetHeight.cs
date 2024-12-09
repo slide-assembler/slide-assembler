@@ -1,11 +1,13 @@
-﻿using SlideAssembler;
+﻿using ShapeCrawler;
+using SlideAssembler;
+using SlideAssembler.Operations;
 
-public class SetHeight : IPresentationOperation
+public class SetHeight : NamedShapeOperation<IShape>
 {
     private readonly string name;
     private readonly decimal height;
 
-    public SetHeight(string name, decimal height)
+    public SetHeight(string name, decimal height) : base(name)
     {
         if (height < 0.0m)
         {
@@ -16,22 +18,10 @@ public class SetHeight : IPresentationOperation
         this.height = height;
     }
 
-
-    void IPresentationOperation.Apply(PresentationContext context)
+    protected override void Apply(PresentationContext context, IShape shape)
     {
-        var shapeFound = false;
-
-        foreach (var slide in context.Presentation.Slides)
-        {
-            var shape = slide.Shapes.FirstOrDefault(s => s.Name == name);
-            if (shape is not null)
-            {
-                shape.Height = height;
-                shapeFound = true;
-            }
-        }
-
-        if (!shapeFound && context.ThrowOnError)
+        shape.Height = height;
+        if (shape == null && context.ThrowOnError)
         {
             throw new InvalidDataException($"Shape '{name}' not found.");
         }

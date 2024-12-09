@@ -1,12 +1,14 @@
-﻿using SlideAssembler;
+﻿using ShapeCrawler;
+using SlideAssembler;
+using SlideAssembler.Operations;
 
 
-public class SetWidth : IPresentationOperation
+public class SetWidth : NamedShapeOperation<IShape>
 {
     private readonly string name;
     private readonly decimal width;
 
-    public SetWidth(string name, decimal width)
+    public SetWidth(string name, decimal width) : base(name)
     {
         if (width < 0.0m)
         {
@@ -17,24 +19,16 @@ public class SetWidth : IPresentationOperation
         this.width = width;
     }
 
-    public void Apply(PresentationContext context)
+    protected override void Apply(PresentationContext context, IShape shape)
     {
-        var shapeFound = false;
+        shape.Width = width;
 
-        foreach (var slide in context.Presentation.Slides)
-        {
-            var shape = slide.Shapes.FirstOrDefault(s => s.Name == name);
-            if (shape is not null)
-            {
-                shape.Width = width;
-                shapeFound = true;
-            }
-        }
-
-        if (!shapeFound && context.ThrowOnError)
+        if (shape == null && context.ThrowOnError)
         {
             throw new InvalidDataException($"Shape '{name}' not found.");
         }
     }
+
+
 }
 
