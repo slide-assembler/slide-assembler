@@ -19,7 +19,7 @@ public partial class ReplaceImage : IPresentationOperation
             {
                 if (shape is IPicture)
                 {
-                    UpdateImage((IPicture)shape);
+                    UpdateImage((IPicture)shape, context.ThrowOnError);
                 }
             }
         }
@@ -34,7 +34,7 @@ public partial class ReplaceImage : IPresentationOperation
             Stream stream = (Stream)property.GetValue(data);
             image.Image.Update(stream);
         }
-        else if (!throwOnError)
+        else if (throwOnError)
         {
             throw new InvalidDataException("Property is null or not a stream");
         }

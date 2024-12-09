@@ -36,11 +36,11 @@ namespace TestSlideAssembler
 
             
 
-            operation.Apply(new PresentationContext(template));
+            operation.Apply(new PresentationContext(template, true));
         }
 
         [TestMethod]
-        public void ReplaceImage_WithMissingData_IgnoresException_WhenIgnoreMissingDataIsTrue()
+        public void ReplaceImage_WithMissingData_IgnoresException_WhenThrowOnErrorIsFalse()
         {
             var imageData = new
             {
@@ -48,7 +48,7 @@ namespace TestSlideAssembler
             };
             var operation = new ReplaceImage(imageData);
 
-            operation.Apply(new PresentationContext(template, true));
+            operation.Apply(new PresentationContext(template, false));
             Assert.IsTrue(true);
         }
 
@@ -62,7 +62,7 @@ namespace TestSlideAssembler
             };
             var operation = new ReplaceImage(imageData);
 
-            operation.Apply(new PresentationContext(template));
+            operation.Apply(new PresentationContext(template, true));
         }
     }
 }
