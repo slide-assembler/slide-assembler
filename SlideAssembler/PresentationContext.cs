@@ -2,4 +2,4 @@
 
 public record PresentationContext(
     ShapeCrawlerPresentation Presentation,
-    bool ThrowOnError);
+    bool ThrowOnError = false);

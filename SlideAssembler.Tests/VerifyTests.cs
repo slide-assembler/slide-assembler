@@ -70,7 +70,8 @@ public class VerifyTests : VerifyBase
                 Minimum = values.Min(),
                 Mittelwert = values.Average(),
                 Maximum = values.Max(),
-                Werte = values
+                Werte = values,
+                Logo = File.OpenRead("test.jpg")
             };
 
             var seriesList = new[]
@@ -88,6 +89,7 @@ public class VerifyTests : VerifyBase
                 .Apply(new SetWidth("MinimumRechteck", (decimal)data.Minimum))
                 .Apply(new SetHeight("MinimumRechteck", (decimal)data.Minimum))
                 .Apply(new FillChart("LineChart", seriesList))
+                .Apply(new ReplaceImage(data))
                 .Apply(new ModifyObject<IShape>("MittelwertRechteck", o =>
                 {
                     // TODO: Create extra object for modify object test
