@@ -86,6 +86,7 @@ public class VerifyTests : VerifyBase
                 .Apply(new SetWidth("MittelwertRechteck", (decimal)data.Mittelwert))
                 .Apply(new SetWidth("MaximumRechteck", (decimal)data.Maximum))
                 .Apply(new SetWidth("MinimumRechteck", (decimal)data.Minimum))
+                .Apply(new SetHeight("MinimumRechteck", (decimal)data.Minimum))
                 .Apply(new FillChart("LineChart", seriesList))
                 .Apply(new ModifyObject<IShape>("MittelwertRechteck", o =>
                 {
