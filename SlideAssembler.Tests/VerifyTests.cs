@@ -92,7 +92,6 @@ public class VerifyTests : VerifyBase
                 .Apply(new ReplaceImage(data))
                 .Apply(new ModifyObject<IShape>("MittelwertRechteck", o =>
                 {
-                    // TODO: Create extra object for modify object test
                     o.TextBox.Text = data.Mittelwert.ToString("N2");
                     o.Width = (Decimal)data.Mittelwert;
                     o.Height = 10;
